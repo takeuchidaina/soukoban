@@ -1,0 +1,83 @@
+#include "DxLib.h"
+#include "UI.h"
+#include "Keyboard.h"
+#include "Player.h"
+#include "Box.h"
+#include "Scene_Mgr.h"
+
+
+#define HISTORY_MAX 256
+
+//ここで変数を宣言（C++を使わないのでグローバル変数）
+static S_History History[HISTORY_MAX];
+static int StepCount;
+
+
+int UI_Init() {
+	//ここで初期化をする
+//	memset( History , 0 , sizeof(History) );
+	int StepCount = 0 ;
+	for (int i = 0; i < HISTORY_MAX; i++) {
+		History[i].Player_Drct = E_Drct_None;
+		History[i].Box_Drct = E_Drct_None;
+		History[i].Boxnum = -1;
+	}
+	return 0;
+}
+
+int UI_Dpct() {
+	//ここで計算
+	//Dqctは毎フレーム呼ばれる
+	if (Keyboard_Get(KEY_INPUT_BACK) == 1 /*&& Player_Move_Flg() != true*/) {
+		if (StepCount >= 0) {
+			//プレイヤーとボックスを動かす関数
+			//Player_Back_Move(History[StepCount].Player_Drct);
+			//Box_Back_Move(History[StepCount].Box_Drct);
+			History[StepCount].Player_Drct = E_Drct_None;
+			History[StepCount].Box_Drct = E_Drct_None;
+			StepCount--;
+		}
+	}
+	/*
+	if (Box_Clear() == true) {
+		Scene_Mgr_ChangeScene(E_Scene_result);
+	}
+	*/
+	return 0;
+}
+
+int UI_Draw() {
+	//ここで描写
+	//こっちも毎フレーム呼ばれますが計算とは別に書きます
+	DrawFormatString(0, 440, GetColor(255, 0, 0), "歩数:%d", StepCount);
+	return 0;
+}
+
+//プレイヤー履歴
+int UI_Player_Move_History(E_Drct Drct) {
+	History[StepCount].Player_Drct = Drct;
+	return 0;
+}
+
+//ボックス履歴
+int UI_Box_Move_History(E_Drct Drct,int num) {
+	History[StepCount].Box_Drct = Drct;
+	History[StepCount].Boxnum = num;
+	return 0;
+}
+
+//歩数カウント追加
+int UI_StepCount_MoveOn() {
+	StepCount++;
+	return 0;
+}
+//歩数カウントの提示
+int UI_StepCount() {
+	return StepCount;
+}
+
+
+int UI_End() {
+	//無し
+	return 0;
+}
