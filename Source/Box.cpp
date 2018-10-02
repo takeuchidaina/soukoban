@@ -12,7 +12,7 @@
 static int  i;   //forで使うよう
 int  yousosuu;	 //Boxの個数
 int  goal;
-int  number;
+int  moveNumber;	//動いてる箱のナンバー
 S_Box box[5];    //構造体
 E_Drct Box_Drct;          //向きの管理
 int Box_Move_Flg = OFF;		//動くか動かないか
@@ -46,30 +46,13 @@ bool Box_Clear() {
 		}
 	}
 	return Box_Clear_Flg;
-	//return CLEARフラグ;
-	/*
-	for (i = 0;i < yousosuu;i++) {
-		if//(goal[yousosuu].x == box[yousosuu].x &&  
-			//goal[yousosuu].y == box[yousosuu].y) 
-		//(Map_Data(box[yousosuu].x, box[yousosuu].y) )
-	//		(MAP_Data[2][2] == box[yousosuu].y &&
-	//			MAP_Data[2][2] == box[yousosuu].x)
-		{
-			//もしボックスが全部ゴールに着いたら、true を返す
-			Box_Clear_Flg = ON;
-			return true;
-		}
-		else 
-		{
-			return false;
-		}
-	}*/
-	
+	//return CLEARフラグ;	
 }
 
 int Box_Move(E_Drct Drct, int num) {
 	//プレイヤーからボックスにここへ動けという関数をもらう   
 
+	moveNumber = num;
 	
 	box[num].bx = box[num].x;		//ボックスの初期x座標を仮のx座標に移す
 	box[num].by = box[num].y;		//ボックスの初期y座標を仮のy座標に移す
@@ -122,11 +105,10 @@ int Box_Init() {
 
 	yousosuu =  MAP_Box_Count_Init();
 	
-	box[0].x = 5;
-	box[0].y = 5;
-
+	
 	for (i = 0;i < yousosuu;i++) {
-		//Map_Box_Pos_Init(box[i], i);    //なにこいつ
+		box[i].x = MAP_Box_Pos_Init_x(i);
+		box[i].y = MAP_Box_Pos_Init_y(i);
 	}
 	return 0;
 }
@@ -186,8 +168,8 @@ int Box_Dpct() {		//boxの移動の計算をしている
 			//if (Box_Count_x >= MAP_SIZE || Box_bCount_y <= -MAP_SIZE || Box_Count_x <= -MAP_SIZE || Box_Count_y >= MAP_SIZE)
 		{
 			
-			box[0].y = box[0].by;		//Box_Moveで動かした仮のx座標をboxのx座標に戻す
-			box[0].x = box[0].bx;		//Box_Moveで動かした仮のy座標をboxのy座標に戻す
+			box[moveNumber].y = box[moveNumber].by;		//Box_Moveで動かした仮のx座標をboxのx座標に戻す
+			box[moveNumber].x = box[moveNumber].bx;		//Box_Moveで動かした仮のy座標をboxのy座標に戻す
 
 			/* 各フラグをOFF(0)にする*/
 	        Box_Count_x = 0;
@@ -196,6 +178,7 @@ int Box_Dpct() {		//boxの移動の計算をしている
 			Box_Right_Flg = OFF;
 			Box_Down_Flg = OFF;
 			Box_Left_Flg = OFF;
+			moveNumber = -1;
 		}
 	}
 	return 0;
@@ -205,6 +188,9 @@ int Box_Dpct() {		//boxの移動の計算をしている
 int Box_Back_Move(E_Drct Old_Drct , int num) {   
 
 //	yousosuu = MAP_Box_Count_Init();
+
+	moveNumber = num;
+
 
 	Old_Drct = (E_Drct)((Old_Drct + 2) % 4);
 
@@ -248,10 +234,15 @@ int Box_Draw() {
 
 	yousosuu = MAP_Box_Count_Init();
 
-	for (i = 0;i < yousosuu;i++) {		
-			DrawGraph(box[i].x * MAP_SIZE+ Box_Count_x, box[i].y * MAP_SIZE+ Box_Count_y, Handle, TRUE); // データハンドルを使って画像を描画
+	for (i = 0; i < yousosuu; i++) {
+		if (i != moveNumber) {
+			DrawGraph(box[i].x * MAP_SIZE , box[i].y * MAP_SIZE , Handle, TRUE); // データハンドルを使って画像を描画
 					//(boxのx座標 * map_size(64) + count.x(1マス）, boxのy座標 * map_size(64) + count.y(1マス）)
 		}
+		else {
+			DrawGraph(box[i].x * MAP_SIZE + Box_Count_x, box[i].y * MAP_SIZE + Box_Count_y, Handle, TRUE); // データハンドルを使って画像を描画
+		}
+	}
 
 	DrawFormatString(250, 80, GetColor(255, 0, 0), "box[0].bx:%d", box[0].bx);
 	
