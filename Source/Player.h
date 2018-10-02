@@ -6,6 +6,9 @@ extern int Player_Init();
 extern int Player_Dpct();
 extern int Player_Draw();
 extern int Player_End();
+extern int Player_Move_Flg();
+extern int Player_Push_Box(int *,int *,int);
+
 
 typedef struct {
 
@@ -21,9 +24,11 @@ typedef enum {
 	E_Drct_Up,     //ã
 	E_Drct_Right,  //‰E
 	E_Drct_Down,   //‰º
-	E_Drct_Left,    //¶
+	E_Drct_Left,   //¶
 
 	E_Drct_None
 } E_Drct;  //Drct = Direction(Œü‚«)
+
+extern int Player_Back_Move(E_Drct);
 
 #endif

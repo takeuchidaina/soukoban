@@ -1,3 +1,4 @@
+
 #include "DxLib.h"
 //#include "Init_Mgr.h"
 //#include "Dpct_Mgr.h"
@@ -35,4 +36,3 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	DxLib_End(); // DXƒ‰ƒCƒuƒ‰ƒŠI—¹ˆ—
 	return 0;
 }
-

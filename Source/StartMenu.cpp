@@ -4,8 +4,7 @@
 #include "Keyboard.h"
 #include "Scene_Mgr.h"
 
-
-MenuElement_t StartMenuElement[3] = {
+MenuElement_t MenuElement[3] = {
 { 100, 100, "ゲームスタート" }, // タグの中身の順番で格納される。xに100が、yに100が、nameに"ゲームスタート"が
 { 100, 200, "ヘルプ" },
 { 100, 300, "ゲーム終了" },
@@ -34,7 +33,7 @@ int StartMenu_Dpct() {
 	}
 	for (int i = 0; i<3; i++) {              // メニュー項目数である5個ループ処理
 		if (i == SelectNum) {          // 今処理しているのが、選択番号と同じ要素なら
-			StartMenuElement[i].x = 80; // 座標を80にする
+			MenuElement[i].x = 80; // 座標を80にする
 			if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {	//座標が80になっている項目でスペースキーを押すと
 			//その項目の中に入る
 				switch (i) {
@@ -53,7 +52,7 @@ int StartMenu_Dpct() {
 			}
 		}
 		else {                     // 今処理しているのが、選択番号以外なら
-			StartMenuElement[i].x = 100;// 座標を100にする
+			MenuElement[i].x = 100;// 座標を100にする
 		}
 	}
 	return 0;
@@ -65,7 +64,7 @@ int StartMenu_Draw() {
 
 
 	for (int i = 0; i<3; i++) { // メニュー項目を描画
-		DrawFormatString(StartMenuElement[i].x, StartMenuElement[i].y, GetColor(255, 255, 255), StartMenuElement[i].name);
+		DrawFormatString(MenuElement[i].x, MenuElement[i].y, GetColor(255, 255, 255), MenuElement[i].name);
 	}
 
 	return 0;

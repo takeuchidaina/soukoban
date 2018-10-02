@@ -3,7 +3,7 @@
 #ifndef INCLUDE_UI
 #define INCLUDE_UI
 #include "Player.h"
-
+#endif
 
 //UI系関数を使う為のプロトタイプ宣言
 extern int UI_Init();
@@ -16,9 +16,6 @@ extern int UI_Player_Move_History(E_Drct Drct);
 extern int UI_Box_Move_History(E_Drct Drct,int num);
 extern int UI_StepCount_MoveOn();
 
-//他の関数への提供
-extern int UI_StepCount();
-
 
 //履歴保存用構造体
 typedef struct {
@@ -26,5 +23,3 @@ typedef struct {
 	E_Drct Box_Drct;
 	int Boxnum;
 }S_History;
-
-#endif

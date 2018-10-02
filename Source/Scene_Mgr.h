@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef INCLUDE_SCENE_MGR
-#define INCLUDE_SCENE_MGR
-
 extern void Scene_Mgr_Init();
 extern void Scene_Mgr_Dpct();
 extern void Scene_Mgr_Draw();
@@ -18,5 +15,3 @@ typedef enum {
 
 //ˆø” NextScene ‚ÉƒV[ƒ“‚ğ•ÏX‚·‚é
 void Scene_Mgr_ChangeScene(E_Scene NextScene);
-
-#endif

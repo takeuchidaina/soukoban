@@ -62,6 +62,7 @@ void Scene_Mgr_Draw() {
 		Player_Draw();
 		Box_Draw();
 		UI_Draw();
+
 		DrawFormatString(0, 00, GetColor(255, 255, 255), "ÉQÅ[ÉÄâÊñ ");
 
 		break;

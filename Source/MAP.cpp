@@ -3,103 +3,160 @@
 #include "MAP.h"
 #include "Box.h"
 #include "Player.h"
+#define file_name "MAP_01.csv"
+#define full_path file_path file_name
 
 
-FILE *fp;
-static int i, j = 0;
+int FileHandle, y;
+static int i = 0, j = 0;
 char buf[256];
-int map[10][10];
-int px, py;
-int Boxcnt;
-S_Box Box;
+char c;
+int MAP[MAP_HEIGHT][MAP_WIDTH];  //マップ
+int px, py;			//受け取るプレイヤーの変数
+int Box_Count;		//受け取るBoxの変数;
+static int Box_Pos_x;		//受け取るBoxのx座標変数
+static int Box_Pos_y;		//受け取るBoxのy座標変数
+int lflag;
 
 
-// マップデータ
-int MapData[MAP_HEIGHT][MAP_WIDTH] =
-
-{ { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-{ 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 },
-{ 0, 1, 0, 1, 1, 1, 1, 1, 1, 0 },
-{ 0, 1, 0, 1, 1, 0, 0, 0, 1, 0 },
-{ 0, 1, 1, 1, 1, 0, 0, 0, 1, 0 },
-{ 0, 1, 0, 1, 0, 0, 0, 0, 1, 0 },
-{ 0, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
-{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
-
-
-/*
-// マップのデータ
-void Map_Data(int *Map, int MAP_W, int MAP_H) {
-
-	fp = fopen("test.txt", "r"); 	//テキストファイルを開く
-
-}
-*/
-
-int Map_Data(int x, int y) {
-	return MapData[y][x];
-}
 
 //プレイヤーの初期x座標を受け取る
-int Map_Player_Pos_Init_x() {
+int MAP_Player_Pos_Init_x() {
 
-	return px;
+	return px;		//初期化したプレイヤーのx座標を戻す
 
 }
+
 
 //プレイヤーの初期y座標を受け取る
-int Map_Player_Pos_Init_y() {
+int MAP_Player_Pos_Init_y() {
 
-	return py;
+	return py;		//初期化したプレイヤーのy座標を戻す
 
 }
+
+//MAPの座標
+int MAP_Data(int x, int y) {
+
+	return MAP[y][x];
+}
+
 
 //Boxの個数を受け取る
-int Map_Box_Count_Init() {
+int MAP_Box_Count_Init() {
 
-	return Boxcnt;
+	return Box_Count;
 
 }
 
-	int MAP_Init() {
+//Boxの初期座標
+int MAP_Box_Pos_Init_x(int num) {	
 
-		//ここで初期化をする
-		px = 1;
-	    py = 1;
+	return Box_Pos_x;
 
-		Boxcnt = 1;
-		return 0;
+}
+
+int MAP_Box_Pos_Init_y(int num) {
+
+	return Box_Pos_y;
+
+}
+
+//初期化
+int MAP_Init() {
+	memset(MAP, -1, sizeof(MAP));
+	px = 1;			//受け取ったプレイヤーのx座標を初期化
+	py = 1;			//受け取ったプレイヤーのy座標を初期化
+	Box_Count = 1;	//受け取ったBoxの数の初期化
+	Box_Pos_x = 5;	//受け取ったBoxのx座標の初期化
+	Box_Pos_y = 5;	//受け取ったBoxのy座標の初期化
+
+					// MAP.csv を開く
+	FileHandle = FileRead_open("MAP/MAP_01.csv");	// 一行読み込み
+
+												// ファイルの終端が来るまで表示する
+
+	if (FileHandle == -1)
+	{
+		DrawFormatString(100, 220, GetColor(255, 0, 0), "erararara");
+		WaitKey();
+	}
+	while (FileRead_eof(FileHandle) == 0)
+	{
+		// 一行読み込み
+		//FileRead_gets(String, 256, FileHandle);
+
+
+		c = FileRead_getc(FileHandle);		//1文字読み込む
+		if ('0' <= c && c <= '9') {		//もし0～9だったら
+			MAP[i][j] = c - '0';				//MAPに代入
+		}
+		else if (c == ',') {				//もし","を読み込んだら
+			j++;							//右の数字を読み込む
+		}
+		else if (c == '\n') {					//もし"\n"を読み込んだら
+			j = 0;							//右に行くのをやめる
+			i++;							//次の行に行く
+		}
 	}
 
-	int MAP_Dpct() {
-		//ここで計算
-		//Dqctは毎フレーム呼ばれる
-
-		return 0;
+	/*
+		for (i = 0; i < MAP_HEIGHT; i++) {			//iが10になるまで足す
+			for (j = 0; j < MAP_WIDTH; j++) {		//jが10になるまで足す
+				if (MAP[i][j] != -1) {		//もしMAPが-1と等しくなかったら
+					DrawFormatString(j * 10, i * 20, GetColor(255, 255, 255), "%d", MAP[i][j]);
+				}	//
+			}
+			
 	}
+	*/
 
-	int MAP_Draw() {
-		//ここで描写
-		//こっちも毎フレーム呼ばれますが計算とは別に書きます
+	// ファイルを閉じる
+	FileRead_close(FileHandle);
 
-		// マップを描く
-		for (i = 0; i < MAP_HEIGHT; i++)
+	return 0;
+
+}
+
+
+//計算
+int MAP_Dpct() {
+	//Dpctは毎フレーム呼ばれる
+
+	return 0;
+}
+
+
+//描写
+int MAP_Draw() {
+	//こっちも毎フレーム呼ばれるが計算とは別に書きます
+
+	// マップを描く
+	for (i = 0; i < MAP_HEIGHT; i++)
+	{
+		for (j = 0; j < MAP_WIDTH; j++)
 		{
-			for (j = 0; j < MAP_WIDTH; j++)
+			if (MAP[i][j] == 0)
 			{
-				if (MapData[i][j] == 1)
-				{
-					DrawBox(j * MAP_SIZE, i * MAP_SIZE,
-						j * MAP_SIZE + MAP_SIZE, i * MAP_SIZE + MAP_SIZE,
-						GetColor(255, 255, 255), TRUE);
-				}
+				DrawBox(j * MAP_SIZE, i * MAP_SIZE,
+					j * MAP_SIZE + MAP_SIZE, i * MAP_SIZE + MAP_SIZE,
+					GetColor(0, 230, 0), TRUE);
+			}
+			if (MAP[i][j] == 1)
+			{
+				DrawBox(j * MAP_SIZE, i * MAP_SIZE,
+					j * MAP_SIZE + MAP_SIZE, i * MAP_SIZE + MAP_SIZE,
+					GetColor(122, 255, 122), TRUE);
+				
 			}
 		}
-
-		return 0;
 	}
+	//DrawFormatString(100, 200, GetColor(255, 0, 0), "MAP Draw動いてるよん");
+	return 0;
+}
 
-	int MAP_End() {
-		//無し
-		return 0;
-	}
+
+//終了
+int MAP_End() {
+	return 0;
+}
