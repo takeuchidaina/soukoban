@@ -1,0 +1,29 @@
+
+#ifndef INCLUDE_PLAYER
+#define INCLUDE_PLAYER
+
+extern int Player_Init();
+extern int Player_Dpct();
+extern int Player_Draw();
+extern int Player_End();
+
+typedef struct {
+
+	int x;  //プレイヤーのx座標
+	int y;  //プレイヤーのy座標
+	int nx;  //仮のプレイヤーx座標
+	int ny;  //仮のプレイヤーy座標
+
+}S_Player;
+
+typedef enum {
+
+	E_Drct_Up,     //上
+	E_Drct_Right,  //右
+	E_Drct_Down,   //下
+	E_Drct_Left,    //左
+
+	E_Drct_None
+} E_Drct;  //Drct = Direction(向き)
+
+#endif
