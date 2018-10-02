@@ -7,8 +7,9 @@
 
 
 MenuElement_t ResultMenuElement[MENU_ELEMENT_MAX]{
-	{100 , 200 , "タイトルに戻る"},
-	{100 , 300 , "ゲームを終了する"}
+	{100 , 200 , "次のステージへ"},
+	{100 , 300 , "タイトルに戻る"},
+	{100 , 400 , "ゲームを終了する"}
 };
 
 
@@ -41,10 +42,10 @@ int Result_Dpct() {
 			if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {	//座標が80になっている項目でスペースキーを押すと
 														//その項目の中に入る
 				switch (i) {
-				case 0:
+				case 1:
 					Scene_Mgr_ChangeScene(E_Scene_StartMenu);
 					break;
-				case 1:
+				case 2:
 					Scene_Mgr_End();
 					DxLib_End(); // DXライブラリ終了処理
 					exit(0);

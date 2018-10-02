@@ -42,7 +42,7 @@ int UI_Dpct() {
 	}
 	
 	if (Box_Clear() == true) {
-		//Scene_Mgr_ChangeScene(E_Scene_result);
+		Scene_Mgr_ChangeScene(E_Scene_Result);
 		DrawFormatString(200, 440, GetColor(255, 0, 0), "ÉNÉäÉA");
 	}
 	return 0;
