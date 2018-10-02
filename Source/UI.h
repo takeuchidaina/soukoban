@@ -16,6 +16,9 @@ extern int UI_Player_Move_History(E_Drct Drct);
 extern int UI_Box_Move_History(E_Drct Drct,int num);
 extern int UI_StepCount_MoveOn();
 
+//歩数カウントの提示
+int UI_StepCount();
+
 
 //履歴保存用構造体
 typedef struct {

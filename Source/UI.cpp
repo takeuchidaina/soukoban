@@ -79,6 +79,11 @@ int UI_StepCount_MoveOn() {
 	return 0;
 }
 
+//•à”ƒJƒEƒ“ƒg‚Ì’ñ¦
+int UI_StepCount() {
+	return StepCount;
+}
+
 
 int UI_End() {
 	//–³‚µ
