@@ -50,7 +50,7 @@ int Box_Element;        //Boxの要素数
 //Playerの初期化
 int Player_Init()
 {
-	/*プレイヤーのx/y座標を初期化する(値はMAP.hより)*/
+	//プレイヤーのx/y座標を初期化する(値はMAP.hより)
 	Player.x = MAP_Player_Pos_Init_x();  //プレイヤーの初期化 x
 	Player.y = MAP_Player_Pos_Init_y();  //プレイヤーの初期化 y
 	Drct = E_Drct_None;                  //向きの初期化
@@ -64,7 +64,6 @@ int Player_Init()
 int Player_Dpct()
 {
 
-	/**********************************　上下左右　******************************************/
 	//もし、Move_Flgがfalse(0)ならキー入力を受け付ける(動いていない状態)
 	if (Move_Flg == false)
 	{
@@ -102,7 +101,25 @@ int Player_Dpct()
 		}
 	}
 
-	/*********************************　移動制御(Player)　*****************************************/
+	
+	Player_Move_Check();	//プレイヤーの移動先に何があるかの判断
+
+	//Move_Flgは移動先が壁じゃないならtrueになっている
+	if (Move_Flg == true)
+	{
+		Player_Move();   //プレイヤーを移動させる
+	}
+
+
+	return 0;
+}
+
+
+int Player_Move_Check()
+{
+	//壁
+
+
 	//もし、方向が定められていないなら(移動が終わっている状態なら)
 	if (Drct != E_Drct_None)
 	{
@@ -110,6 +127,7 @@ int Player_Dpct()
 		if (MAP_Data(Player.nx, Player.ny) == E_Object_Load || MAP_Data(Player.nx, Player.ny) == E_Object_Goal)
 		{
 			Move_Flg = true;  //Move_Flgのtrue　これにより動いているという判定になる
+
 		}
 
 		//もし、移動先に壁が　ある　なら
@@ -122,138 +140,140 @@ int Player_Dpct()
 			//各キーフラグのfalse　>>  キー入力ができるようになる
 			Drct = E_Drct_None;
 		}
+
+
+	//Box
+
+
+		//	for(i=0;i<Box_Element;i++)
+		//	{
 		Box_Pos(&Box_x, &Box_y, Box_Element);
 
-		//ここはBox_Elementの使い方がおかしい
-		for (i = Box_Element; i == 0; i--)
+		if (Player.nx == Box_x && Player.ny == Box_y)
 		{
-			if (Player.nx == Box_x && Player.ny == Box_y)
+			//Box - Player = 1or-1 これを　Boxに足すとBoxの次の座標が出る。
+			Judge_x = Player.nx - Player.x;
+			Judge_y = Player.ny - Player.y;
+			//仮の変数(nx・ny)に代入
+			Box_nx = Box_x + Judge_x;
+			Box_ny = Box_y + Judge_y;
+			//もし、押された方向に壁が　ない　なら
+			if (MAP_Data(Box_nx, Box_ny) == E_Object_Load || MAP_Data(Box_nx, Box_ny) == E_Object_Goal)
 			{
-				Check_Flg = true;
-				//Box - Player = 1or-1 これを　Boxに足すとBoxの次の座標が出る。
-				Judge_x = Player.nx - Player.x;
-				Judge_y = Player.ny - Player.y;
-				//仮の変数に代入
-				Box_nx = Box_x + Judge_x;
-				Box_ny = Box_y + Judge_y;
-				//もし、押された方向に壁が　ない　なら
-				if (MAP_Data(Box_nx, Box_ny) == E_Object_Load || MAP_Data(Box_nx, Box_ny) == E_Object_Goal)
-				{
-					Box_Move(Drct, Box_Element);
-					UI_Box_Move_History(Drct, Box_Element);
+				Box_Move(Drct, Box_Element);
+				UI_Box_Move_History(Drct, Box_Element);
 
-					//					Box_x = Box_nx;
-					//					Box_y = Box_ny;
-				}
-				//もし、押された方向に壁が　ある　なら
-				if (MAP_Data(Box_nx, Box_ny) == E_Object_Wall)
-				{
-					Player.nx = Player.nx;
-					Player.ny = Player.ny;
-					Move_Flg = false;
-					Drct = E_Drct_None;
-				}
+
+			}
+			//もし、押された方向に壁が　ある　なら
+			if (MAP_Data(Box_nx, Box_ny) == E_Object_Wall)
+			{
+				Player.nx = Player.nx;
+				Player.ny = Player.ny;
+				Move_Flg = false;
+				Drct = E_Drct_None;
 			}
 		}
+		//	}
 
 
-		//もし、Move_Flgがtrueなら　(Move_Flgは移動先が壁じゃないならtrueになっている)
-		if (Move_Flg == true)
-		{
-			//各キーのFlgによりその方向にあわせてcountが + か - される
-			if (Drct == E_Drct_Up)
-			{
-				count_y--;   //y座標が - される
-			}
-			if (Drct == E_Drct_Left)
-			{
-				count_x--;   //x座標が - される
-			}
-			if (Drct == E_Drct_Down)
-			{
-				count_y++;   //y座標が + される
-			}
-			if (Drct == E_Drct_Right)
-			{
-				count_x++;   //x座標が + される
-			}
-		}
+	}
+	return 0;
+}
 
-		//もし、x/yのカウントが±64なら
-		if (count_x >= MAP_SIZE || count_y <= -MAP_SIZE || count_x <= -MAP_SIZE || count_y >= MAP_SIZE)
-		{
-			//プレイヤーの座標に仮の座標を代入する  >>  描画の際に使うのはxとy
-			Player.y = Player.ny;
-			Player.x = Player.nx;
-			if (Back_Flg == false)
-			{
-				UI_Player_Move_History(Drct);
 
-				UI_StepCount_MoveOn();
-			}
-			else
-			{
-				Back_Flg = false;
-			}
+int Player_Move()
+{
 
-			//カウントの初期化  各フラグのfalse(0)
-			count_x = 0;
-			count_y = 0;
-			Move_Flg = false;
-			Drct = E_Drct_None;
-
-		}
+		//入力されたキーの方向にあわせてcountが + か - される
+	switch (Drct)
+	{
+		//上
+	case E_Drct_Up:
+		count_y--;
+		break;
+		//左
+	case E_Drct_Left:
+		count_x--;
+		break;
+		//下
+	case E_Drct_Down:
+		count_y++;
+		break;
+		//右
+	case E_Drct_Right:
+		count_x++;
+		break;
 	}
 
-	//Boxを押す関数
 
 
+	//もし、x・yのカウントが±64なら
+	if (count_x >= MAP_SIZE || count_y <= -MAP_SIZE || count_x <= -MAP_SIZE || count_y >= MAP_SIZE)
+	{
+		//プレイヤーの座標に仮の座標を代入する  >>  描画の際に使うのはxとy
+		Player.y = Player.ny;
+		Player.x = Player.nx;
+
+		if (Back_Flg == false)
+		{
+			UI_Player_Move_History(Drct);   //プレイヤーの向きを渡す
+
+			UI_StepCount_MoveOn();   //ステップカウントを増やす
+		}
+		else
+		{
+			Back_Flg = false;
+		}
+
+		//カウントの初期化  各フラグのfalse(0)
+		count_x = 0;
+		count_y = 0;
+		Move_Flg = false;
+		Drct = E_Drct_None;
+
+	}
 
 	return 0;
 }
 
 
-
-
 //バックスペースが押されたら戻る
 int Player_Back_Move(E_Drct Old_Drct) {
-
-	//向きを反転させる
-	Drct = (E_Drct)((Old_Drct + 2) % 4);
 	//フラグがtrueだとカウントされる
 	Move_Flg = true;
 
-	//向きに合わせて移動する
-	switch (Drct) {
+	//向きを反転させる
+	Drct = (E_Drct)((Old_Drct + 2) % 4);
 
+
+	//向きに合わせて移動する
+	switch (Drct) 
+	{
 		//上
 	case E_Drct_Up:
-
 		Player.ny += -1;
 		break;
-
 		//左
 	case E_Drct_Left:
-
 		Player.nx += -1;
 		break;
-
 		//下
 	case E_Drct_Down:
-
 		Player.ny += 1;
 		break;
-
 		//右
 	case E_Drct_Right:
-
 		Player.nx += 1;
 		break;
-
-	};
+	}
 
 	//フラグがtrueだと、Playerのnx/ny座標にx/yが代入されない
 	Back_Flg = true;
+
+	//上のフラグの位置変えるといいかも？？フォーマットストリング使ってうまいことやる
+
+
 
 	return 0;
 }
@@ -323,9 +343,11 @@ int Player_Draw()
 	DrawFormatString(320, 20, GetColor(255, 0, 0), "向き:%d", Drct);
 	DrawFormatString(420, 20, GetColor(255, 0, 0), "MoveFlg:%d", Move_Flg);
 	DrawFormatString(70, 40, GetColor(255, 0, 0), "個数:%d", Box_Element);
-	DrawFormatString(130, 40, GetColor(255, 0, 0), "boxのx座標:%d", Box_x);
-	DrawFormatString(250, 40, GetColor(255, 0, 0), "boxのy座標:%d", Box_y);
-	DrawFormatString(200, 400, GetColor(255, 0, 0), "(接触)Check_Flg:%d", Check_Flg);
+	DrawFormatString(70, 60, GetColor(255, 0, 0), "back_flg:%d", Back_Flg);
+
+	//DrawFormatString(130, 40, GetColor(255, 0, 0), "boxのx座標:%d", Box_x);
+	//DrawFormatString(250, 40, GetColor(255, 0, 0), "boxのy座標:%d", Box_y);
+	//DrawFormatString(200, 400, GetColor(255, 0, 0), "(接触)Check_Flg:%d", Check_Flg);
 #endif
 
 	return 0;

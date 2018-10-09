@@ -9,6 +9,9 @@ extern int Player_End();
 extern int Player_Move_Flg();
 extern int Player_Push_Box(int *,int *,int);
 
+extern int Player_Move_Check();
+extern int Player_Move();
+
 
 typedef struct {
 
