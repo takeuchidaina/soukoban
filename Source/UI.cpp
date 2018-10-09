@@ -15,7 +15,7 @@ static int StepCount;
 
 int UI_Init() {
 	//‚±‚±‚Å‰Šú‰»‚ğ‚·‚é
-//	memset( History , 0 , sizeof(History) );
+	memset( History , 0 , sizeof(History) );
 	int StepCount = 0 ;
 	for (int i = 0; i < HISTORY_MAX; i++) {
 		History[i].Player_Drct = E_Drct_None;
