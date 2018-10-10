@@ -17,71 +17,95 @@ typedef enum
 
 /**********************************　変数宣言　******************************************/
 //共通
-E_Drct Drct;   //向きの管理
-int i;         //for文用
+
+	int i;         //for文用
 
 
 //Player
-S_Player Player;     //Playerの構造体(ヘッダーファイルにて作成)
-int None_Num;        //画像のスタンバイ状態(静止状態)
-int Gyallaly[12];    //プレイヤー画像の変数(今回は12分割なので12)
-int Drct_Count;
-int count_x;         //マップサイズ分カウントする役割 x
-int count_y;         //マップサイズ分カウントする役割 y
-bool Move_Flg;       //動作管理
-bool Up_Flg;         //上が押されたら(向きやcountの管理を行う)
-bool Down_Flg;       //下が押されたら(向きやcountの管理を行う)
-bool Right_Flg;      //右が押されたら(向きやcountの管理を行う)
-bool Left_Flg;       //左が押されたら(向きやcountの管理を行う)
-bool Back_Flg;       //Back_Moveフラグ
-bool Player_Image;   //画像の順番(アニメーション)
-bool Check_Flg;      //確認用
+
+	//Playerの位置
+	S_Player Player;     //Playerの構造体(ヘッダーファイルにて作成)
+
+	//移動
+	bool Move_Flg;       //動作管理
+	int count_x;         //マップサイズ分カウント ｘ
+	int count_y;         //マップサイズ分カウント ｙ
+
+	//向き
+	E_Drct Drct;   //向きの管理
+	bool Up_Flg;     //上が押されたら(向きやcountの管理を行う)
+	bool Down_Flg;   //下が押されたら(向きやcountの管理を行う)
+	bool Right_Flg;  //右が押されたら(向きやcountの管理を行う)
+	bool Left_Flg;   //左が押されたら(向きやcountの管理を行う)
+
+	//BackSpace
+	bool Back_Flg;   //Back_Moveフラグ
+	int Drct_Count;      //UIへ向きを渡す際のカウント
+
+	//画像
+	int None_Num;        //画像のスタンバイ状態(静止状態)
+	int Gyallaly[12];    //プレイヤー画像の変数(今回は12分割なので12)
+	bool Player_Image;   //画像の順番(アニメーション)
 
 //Box
-int Box_x;
-int Box_y;
-int Box_nx;         //Boxの仮の x 座標
-int Box_ny;         //Boxの仮の y 座標
-int Judge_x;        //Boxの移動先を判断する x
-int Judge_y;        //Boxの移動先を判断する y
-int Box_Element;    //Boxの要素数
+	int Box_x;
+	int Box_y;
+	int Box_nx;         //Boxの仮の x 座標
+	int Box_ny;         //Boxの仮の y 座標
+	int Judge_x;        //Boxの移動先を判断する x
+	int Judge_y;        //Boxの移動先を判断する y
+	int Box_Element;    //Boxの要素数
 
 
 //Playerの初期化
 int Player_Init()
 {
-	//プレイヤーのx/y座標を初期化する(値はMAP.hより)
-	Player.x = MAP_Player_Pos_Init_x();  //プレイヤーの初期化 x
-	Player.y = MAP_Player_Pos_Init_y();  //プレイヤーの初期化 y
-	Drct = E_Drct_None;                  //向きの初期化
-	LoadDivGraph("gazou/Player.png", 12, 3, 4, 64, 64, Gyallaly);  	//画像の読み込み
+ //Player
 
-	i=0;                   //for文用
+	//Playerの位置(MAPより)
+	Player.x = MAP_Player_Pos_Init_x();
+	Player.y = MAP_Player_Pos_Init_y();
+
+	//移動
+	Move_Flg = false;
+	count_x = 0;
+	count_y = 0;
+
+	//向き
+	Drct = E_Drct_None;  //向き:無し
+	Up_Flg = false;
+	Down_Flg = false;
+	Right_Flg = false;
+	Left_Flg = false;
+
+	//画像
+	Gyallaly[12] = { 0,0,0,
+					 0,0,0,
+					 0,0,0,
+					 0,0,0 };
+	LoadDivGraph("gazou/Player.png", 12, 3, 4, 64, 64, Gyallaly);  //Playerの画像:3x4の64ドット
+	None_Num = 7;    //画像のスタンバイ状態(静止状態)を正面向いてるやつへ
+	Player_Image = 0;
+
+	//BackSpace
 	Drct_Count = 0;
+	Back_Flg = false;    //Back_Moveフラグ
 
-	//Player
-	S_Player Player;         //Playerの構造体(ヘッダーファイルにて作成)
-	None_Num = 7;        //画像のスタンバイ状態(静止状態)
-	Gyallaly[12];        //プレイヤー画像の変数(今回は12分割なので12)
-	count_x = 0;         //マップサイズ分カウントする役割 x
-	count_y = 0;         //マップサイズ分カウントする役割 y
-	Move_Flg = false;   //動作管理
-	Up_Flg = false;     //上が押されたら(向きやcountの管理を行う)
-	Down_Flg = false;   //下が押されたら(向きやcountの管理を行う)
-	Right_Flg = false;  //右が押されたら(向きやcountの管理を行う)
-	Left_Flg = false;   //左が押されたら(向きやcountの管理を行う)
-	Back_Flg = false;   //Back_Moveフラグ
-	Player_Image = 0;   //画像の順番(アニメーション)
-	Check_Flg = false;  //確認用
 
-	//Box
+ //Box
+
+	//座標
 	Box_x = 0;
 	Box_y = 0;
-	Box_nx = 0;         //Boxの仮の x 座標
-	Box_ny = 0;         //Boxの仮の y 座標
+	Box_nx = 0;
+	Box_ny = 0;
+
+	//移動
 	Judge_x = 0;        //Boxの移動先を判断する x
 	Judge_y = 0;        //Boxの移動先を判断する y
-	Box_Element;        //Boxの要素数
+
+	//複数個対応
+	Box_Element;
 
 	return 0;
 }
@@ -91,13 +115,12 @@ int Player_Init()
 int Player_Dpct()
 {
 
-	//静止状態ならキー入力を受け付ける
-	if (Move_Flg == false)
+	//キー入力処理とnx/nyの座標更新
+	if (Move_Flg == false)  //静止状態ならキー入力を受け付ける
 	{
-		//戻るボタンが押されていないなら
-		if (Back_Flg == false)
+		//nx/nyの座標更新
+		if (Back_Flg == false)  //BackSpaceが押されていないなら
 		{
-			//仮の変数ny/nxの座標の更新
 			Player.nx = Player.x;
 			Player.ny = Player.y;
 		}
@@ -111,19 +134,19 @@ int Player_Dpct()
 			Drct = E_Drct_Up;
 		}
 		//左
-		if (Keyboard_Get(KEY_INPUT_LEFT) == 1)   //←
+		if (Keyboard_Get(KEY_INPUT_LEFT) == 1)  //←
 		{
 			Player.nx--;      //プレイヤーの仮の変数nxのx座標が-1(-MAP_SIZE)される
 			Drct = E_Drct_Left;
 		}
 		//下
-		if (Keyboard_Get(KEY_INPUT_DOWN) == 1)   //↓
+		if (Keyboard_Get(KEY_INPUT_DOWN) == 1)  //↓
 		{
 			Player.ny++;      //プレイヤーの仮の変数nyのy座標が+1(+MAP_SIZE)される
 			Drct = E_Drct_Down;
 		}
 		//右
-		if (Keyboard_Get(KEY_INPUT_RIGHT) == 1)   //→
+		if (Keyboard_Get(KEY_INPUT_RIGHT) == 1) //→
 		{
 			Player.nx++;       //プレイヤーの仮の変数nxのx座標が+1(+MAP_SIZE)される
 			Drct = E_Drct_Right;
@@ -158,7 +181,7 @@ int Player_Move_Check()
 		//移動先に壁が ない なら
 		if (MAP_Data(Player.nx, Player.ny) == E_Object_Load || MAP_Data(Player.nx, Player.ny) == E_Object_Goal)
 		{
-			Move_Flg = true;  //Move_Flgのtrue　これにより動いているという判定になる
+			Move_Flg = true;  //これにより動いているという判定になる
 		}
 
 		//移動先に壁が ある なら
@@ -175,7 +198,7 @@ int Player_Move_Check()
 	//Box
 
 
-//	for(i=0;i<Box_Element;i++)  //複数のやつ
+//	for(int i=0;i<Box_Element;i++)  //複数のやつ
 //	{
 		Box_Pos(&Box_x, &Box_y, Box_Element);
 
@@ -301,7 +324,7 @@ int Player_Back_Move(E_Drct Old_Drct) {
 		break;
 	}
 
-	//フラグがtrueだと、Playerのnx/ny座標にx/yが代入されない
+	//フラグがtrueだとPlayerのnx/ny座標にx/yが代入されない
 	Back_Flg = true;
 
 
@@ -375,9 +398,6 @@ int Player_Draw()
 	DrawFormatString(70, 40, GetColor(255, 0, 0), "個数:%d", Box_Element);
 	DrawFormatString(70, 60, GetColor(255, 0, 0), "back_flg:%d", Back_Flg);
 
-	//DrawFormatString(130, 40, GetColor(255, 0, 0), "boxのx座標:%d", Box_x);
-	//DrawFormatString(250, 40, GetColor(255, 0, 0), "boxのy座標:%d", Box_y);
-	//DrawFormatString(200, 400, GetColor(255, 0, 0), "(接触)Check_Flg:%d", Check_Flg);
 #endif
 
 	return 0;
