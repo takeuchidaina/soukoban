@@ -11,6 +11,7 @@ extern int Player_Push_Box(int *,int *,int);
 
 extern int Player_Move_Check();
 extern int Player_Move();
+extern int Player_Back_Argument();
 
 
 typedef struct {

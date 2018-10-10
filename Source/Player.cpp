@@ -19,12 +19,13 @@ typedef enum
 //共通
 E_Drct Drct;   //向きの管理
 int i;         //for文用
-int Count;
+
 
 //Player
 S_Player Player;     //Playerの構造体(ヘッダーファイルにて作成)
 int None_Num;        //画像のスタンバイ状態(静止状態)
 int Gyallaly[12];    //プレイヤー画像の変数(今回は12分割なので12)
+int Drct_Count;
 int count_x;         //マップサイズ分カウントする役割 x
 int count_y;         //マップサイズ分カウントする役割 y
 bool Move_Flg;       //動作管理
@@ -56,11 +57,11 @@ int Player_Init()
 	LoadDivGraph("gazou/Player.png", 12, 3, 4, 64, 64, Gyallaly);  	//画像の読み込み
 
 	i=0;                   //for文用
-	int Count = 0;
+	Drct_Count = 0;
 
 	//Player
 	S_Player Player;         //Playerの構造体(ヘッダーファイルにて作成)
-	 None_Num = 7;        //画像のスタンバイ状態(静止状態)
+	None_Num = 7;        //画像のスタンバイ状態(静止状態)
 	Gyallaly[12];        //プレイヤー画像の変数(今回は12分割なので12)
 	count_x = 0;         //マップサイズ分カウントする役割 x
 	count_y = 0;         //マップサイズ分カウントする役割 y
@@ -104,39 +105,46 @@ int Player_Dpct()
 	//キー入力処理
 
 		//上
-		if (Keyboard_Get(KEY_INPUT_UP) == 1)   //↑が押されたら
+		if (Keyboard_Get(KEY_INPUT_UP) == 1)   //↑
 		{
 			Player.ny--;    //プレイヤーの仮の変数nyの座標が-1(-MAP_SIZE)される
 			Drct = E_Drct_Up;
 		}
 		//左
-		if (Keyboard_Get(KEY_INPUT_LEFT) == 1)   //←が押されたら
+		if (Keyboard_Get(KEY_INPUT_LEFT) == 1)   //←
 		{
 			Player.nx--;      //プレイヤーの仮の変数nxのx座標が-1(-MAP_SIZE)される
 			Drct = E_Drct_Left;
 		}
 		//下
-		if (Keyboard_Get(KEY_INPUT_DOWN) == 1)   //↓が押されたら
+		if (Keyboard_Get(KEY_INPUT_DOWN) == 1)   //↓
 		{
 			Player.ny++;      //プレイヤーの仮の変数nyのy座標が+1(+MAP_SIZE)される
 			Drct = E_Drct_Down;
 		}
 		//右
-		if (Keyboard_Get(KEY_INPUT_RIGHT) == 1)   //→が押されたら
+		if (Keyboard_Get(KEY_INPUT_RIGHT) == 1)   //→
 		{
 			Player.nx++;       //プレイヤーの仮の変数nxのx座標が+1(+MAP_SIZE)される
 			Drct = E_Drct_Right;
 		}
+
+
 	}
 
 	//プレイヤーの移動先に何があるかの判断
-		Player_Move_Check();	
+	if (Drct != E_Drct_None)  //キーが入力されているなら
+	{
+		Player_Move_Check();
+	}
+		
 
 	//プレイヤーを移動させる
-		if (Move_Flg == true)	//移動先が壁じゃないならtrueになっている
-		{
-			Player_Move();
-		}
+	if (Move_Flg == true)	//移動先が壁じゃないならtrueになっている
+	{
+		Player_Move();
+	}
+
 
 
 	return 0;
@@ -147,17 +155,13 @@ int Player_Move_Check()
 {
 	//壁
 
-
-	//方向が定められていないなら(移動が終わっている状態なら)
-	if (Drct != E_Drct_None)
-	{
-		//もし、移動先に壁が　ない　なら
+		//移動先に壁が ない なら
 		if (MAP_Data(Player.nx, Player.ny) == E_Object_Load || MAP_Data(Player.nx, Player.ny) == E_Object_Goal)
 		{
 			Move_Flg = true;  //Move_Flgのtrue　これにより動いているという判定になる
 		}
 
-		//もし、移動先に壁が　ある　なら
+		//移動先に壁が ある なら
 		if (MAP_Data(Player.nx, Player.ny) == E_Object_Wall)
 		{
 			//壁なら動作させない
@@ -167,7 +171,6 @@ int Player_Move_Check()
 			//各キーフラグのfalse　>>  キー入力ができるようになる
 			Drct = E_Drct_None;
 		}
-	}
 
 	//Box
 
@@ -190,9 +193,7 @@ int Player_Move_Check()
 			if (MAP_Data(Box_nx, Box_ny) == E_Object_Load || MAP_Data(Box_nx, Box_ny) == E_Object_Goal)
 			{
 				Box_Move(Drct, Box_Element);
-				UI_Box_Move_History(Drct, Box_Element);
-
-
+				UI_Box_Move_History(Drct, Box_Element);			
 			}
 			//もし、押された方向に壁が　ある　なら
 			if (MAP_Data(Box_nx, Box_ny) == E_Object_Wall)
@@ -234,24 +235,12 @@ int Player_Move()
 	}
 
 
-
 	//もし、x・yのカウントが±64なら
 	if (count_x >= MAP_SIZE || count_y <= -MAP_SIZE || count_x <= -MAP_SIZE || count_y >= MAP_SIZE)
 	{
 		//プレイヤーの座標に仮の座標を代入する  >>  描画の際に使うのはxとy
 		Player.y = Player.ny;
 		Player.x = Player.nx;
-
-		if (Back_Flg == false)
-		{
-			UI_Player_Move_History(Drct);   //プレイヤーの向きを渡す
-
-			UI_StepCount_MoveOn();   //ステップカウントを増やす
-		}
-		else
-		{
-			Back_Flg = false;
-		}
 
 		//カウントの初期化  各フラグのfalse(0)
 		count_x = 0;
@@ -264,6 +253,23 @@ int Player_Move()
 	return 0;
 }
 
+int Player_Back_Argument()
+{
+	if (Back_Flg == false)
+	{
+		UI_Player_Move_History(Drct);   //プレイヤーの向きを渡す
+
+		UI_StepCount_MoveOn();   //ステップカウントを増やす
+	}
+	else
+	{
+		Back_Flg = false;
+	}
+
+	Drct_Count = 0;
+
+	return 0;
+}
 
 //バックスペースが押されたら戻る
 int Player_Back_Move(E_Drct Old_Drct) {
@@ -298,7 +304,6 @@ int Player_Back_Move(E_Drct Old_Drct) {
 	//フラグがtrueだと、Playerのnx/ny座標にx/yが代入されない
 	Back_Flg = true;
 
-	//上のフラグの位置変えるといいかも？？フォーマットストリング使ってうまいことやる
 
 
 
@@ -308,8 +313,6 @@ int Player_Back_Move(E_Drct Old_Drct) {
 //描写(毎フレーム呼ばれる)
 int Player_Draw()
 {
-
-	/****************************************** Player ******************************************/
 	/*MAP_SIZEをかけることによってマスの移動処理が1マスなら+1をすれば64ずれるというように楽になる*/
 	/*LoadDivGraph("File/name.",画像の分割数,横の枚数,縦の枚数,画像のサイズx,画像のサイズy,配列名)*/
 
