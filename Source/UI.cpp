@@ -31,11 +31,12 @@ int UI_Dpct() {
 	if (Keyboard_Get(KEY_INPUT_BACK) == 1 && Player_Move_Flg() != true) {
 		if (StepCount > 0) {
 			//プレイヤーとボックスを動かす関数
+			StepCount--;
 			Player_Back_Move(History[StepCount].Player_Drct);
 			if (History[StepCount].Box_Drct != E_Drct_None){
 				Box_Back_Move(History[StepCount].Box_Drct, History[StepCount].Boxnum);
 			}
-			StepCount--;
+			
 			History[StepCount].Player_Drct = E_Drct_None;
 			History[StepCount].Box_Drct = E_Drct_None;
 		}
@@ -56,7 +57,11 @@ int UI_Draw() {
 		//Scene_Mgr_ChangeScene(E_Scene_result);
 		DrawFormatString(200, 440, GetColor(255, 0, 0), "クリア");
 	}
+#ifdef _DEBUG
 
+	DrawFormatString(300, 300, GetColor(122, 122, 255), "%d:%d", StepCount, History[StepCount-1].Player_Drct);
+
+#endif
 	return 0;
 }
 

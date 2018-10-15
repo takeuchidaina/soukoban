@@ -39,9 +39,10 @@ void Scene_Mgr_Dpct() {
 	case E_Scene_Game:
 		//ÉQÅ[ÉÄâÊñ 
 		MAP_Dpct();
+		UI_Dpct();
 		Player_Dpct();
 		Box_Dpct();
-		UI_Dpct();
+
 		break;
 	case E_Scene_Result:
 		Result_Dpct();
