@@ -41,7 +41,6 @@
 
 	//一歩戻る
 	bool Back_Flg;   //Back_Moveフラグ
-	int Drct_Count;  //UIへ向きを渡す際のカウント
 	int Argument_Check;  //引数と関数の管理を行う
 
 
@@ -90,7 +89,6 @@ int Player_Init()
 	Player_Image = 0;
 
 	//一歩戻る
-	Drct_Count = 0;
 	Back_Flg = false;    //キー入力されていない
 	Argument_Check = 0;  //プレイヤーもボックスも動かさない
 
@@ -157,27 +155,18 @@ int Player_Dpct()
 
 	}
 
-	//向きカウントを1ずつ増加
-	Drct_Count++;
-	if (Drct_Count >= 64)
-		Drct_Count = 64;
-
 	//プレイヤーの移動先に何があるかの判断(関数:Player_Move_Check)
 	if (Drct != E_Drct_None)  //キーが入力されているなら
 	{
 		Player_Move_Check();
 	}
-
-
 		
 	//プレイヤーを移動させる(関数:Player_Move)
 	if (Move_Flg == true)	//移動先が壁じゃないなら
 	{
 		Player_Move();
 		Player_Back_Argument();
-
 	}
-
 
 	return 0;
 }
@@ -195,7 +184,6 @@ int Player_Move_Check()
 			if (Argument_Check == 0)
 			{
 				UI_Player_Move_History(Drct);
-				//Player_Back_Argument();
 				Argument_Check = 1;   //プレイヤーが動く
 			}
 		}
@@ -208,7 +196,6 @@ int Player_Move_Check()
 			//各キーフラグのfalse　>>  キー入力ができるようになる
 			Move_Flg = false;
 			Drct = E_Drct_None;
-			Drct_Count = 0;
 		}
 
 	//Box
@@ -239,13 +226,10 @@ int Player_Move_Check()
 				if (MAP_Data(Box_nx, Box_ny) == E_Object_Wall)
 				{
 					//壁なら動作させない
-					Player.nx = Player.nx;
-					Player.ny = Player.ny;
 
 					//各キーフラグのfalse　>>  キー入力ができるようになる
 					Move_Flg = false;
 					Drct = E_Drct_None;
-					Drct_Count = 0;
 				}
 			}
      	}
@@ -304,38 +288,11 @@ int Player_Back_Argument()
 	//BackSpaceが押されていないなら(プレイヤーが進んだら)　>>　プレイヤーの向きをUIへ渡す・歩数の増加
 	if (Back_Flg == false)
 	{
-		/*
-		if (Argument_Check == 0)
-		{
-			//何も動かない場合
-		}
-		if (Argument_Check == 1)
-		{
-			//プレイヤーのみ動く場合
-			UI_Player_Move_History(Drct);   //プレイヤーの向きを渡す
-			UI_StepCount_MoveOn();   //ステップカウントを増やす
-		}
-		if (Argument_Check == 2)
-		{
-			//プレイヤーとボックスが動く場合
-			UI_Player_Move_History(Drct);   //プレイヤーの向きを渡す
-			
-			Box_Move(Drct, Box_Element);
-			UI_Box_Move_History(Drct, Box_Element);
-			UI_StepCount_MoveOn();   //ステップカウントを増やす
-		}
-		*/
-
 		if (Argument_Check == 1)
 		{
 			UI_StepCount_MoveOn();
 			Argument_Check = 2;
 		}
-		/*
-		UI_StepCount_MoveOn();は呼び出されている(歩数が増減する為)
-		BackSpaceを押した際に同じif文の中にあるstepcount--は動作している(UIの34行目～
-		プログラムは動作しているのに機能がしていない。
-		*/
 	}
 
 	//Back_Flgがtrueなら　>>　Back_Flg をfalseへ
@@ -345,19 +302,11 @@ int Player_Back_Argument()
 		Back_Flg = false;
 	}
 
-	//初期化
-	//Argument_Check = 0;
-
-	//向き用カウントの初期化
-	Drct_Count = 0;
-
 	return 0;
 }
 
 /**********************************　一歩戻る(条件:UIより)　******************************************/
 int Player_Back_Move(E_Drct Old_Drct) {
-	//Player_Moveが使えるようになる
-	//Move_Flg = true;
 
 	//フラグがtrueだとPlayerのnx/ny座標にx/yが代入されない
 	Back_Flg = true;
@@ -452,7 +401,6 @@ int Player_Draw()
 	DrawFormatString(420, 20, GetColor(255, 0, 0), "MoveFlg:%d", Move_Flg);
 	//DrawFormatString(70, 40, GetColor(255, 0, 0), "個数:%d", Box_Element);
 	DrawFormatString(70, 60, GetColor(255, 0, 0), "back_flg:%d", Back_Flg);
-	DrawFormatString(200, 60, GetColor(255, 0, 0), "Drct_Count:%d", Drct_Count);
 
 #endif
 
