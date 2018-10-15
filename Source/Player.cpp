@@ -199,9 +199,9 @@ int Player_Move_Check()
 		}
 
 	//Box
-
-		for(int i=0;i<Box_Element;i++)  //複数のやつ
-		{
+		//コメントアウトを外すと多分複数対応
+		//for(int i=0;i<Box_Element;i++)  //複数のやつ
+		//{
 		    //座標と個数の取得(MApより)
 			Box_Pos(&Box_x, &Box_y, Box_Element);
 
@@ -219,8 +219,10 @@ int Player_Move_Check()
 				//押された方向が 道かゴール なら　>>　Boxへ引数を渡す
 				if (MAP_Data(Box_nx, Box_ny) == E_Object_Load || MAP_Data(Box_nx, Box_ny) == E_Object_Goal)
 				{
-					Box_Move(Drct, i);
-					UI_Box_Move_History(Drct, i);	
+					Box_Move(Drct, Box_Element);
+					UI_Box_Move_History(Drct, Box_Element);
+
+					//Box_Elementをiに変えると多分複数対応
 				}
 				//押された方向が 壁 なら　>>　動かない
 				if (MAP_Data(Box_nx, Box_ny) == E_Object_Wall)
@@ -232,7 +234,7 @@ int Player_Move_Check()
 					Drct = E_Drct_None;
 				}
 			}
-     	}
+     	//}
 
 	return 0;
 }
