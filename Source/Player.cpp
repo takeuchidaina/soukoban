@@ -167,11 +167,15 @@ int Player_Dpct()
 	{
 		Player_Move_Check();
 	}
+
+
 		
 	//プレイヤーを移動させる(関数:Player_Move)
 	if (Move_Flg == true)	//移動先が壁じゃないなら
 	{
 		Player_Move();
+		Player_Back_Argument();
+
 	}
 
 
@@ -188,9 +192,11 @@ int Player_Move_Check()
 		{
 			Move_Flg = true;  //動作状態(Player_Moveが作動)
 
-			if (Drct_Count >= MAP_SIZE)
+			if (Argument_Check == 0)
 			{
-				Player_Back_Argument();
+				UI_Player_Move_History(Drct);
+				//Player_Back_Argument();
+				Argument_Check = 1;   //プレイヤーが動く
 			}
 		}
 
@@ -198,8 +204,6 @@ int Player_Move_Check()
 		if (MAP_Data(Player.nx, Player.ny) == E_Object_Wall)
 		{
 			//壁なら動作させない
-			Player.ny = Player.ny;
-			Player.nx = Player.nx;
 
 			//各キーフラグのfalse　>>  キー入力ができるようになる
 			Move_Flg = false;
@@ -209,8 +213,8 @@ int Player_Move_Check()
 
 	//Box
 
-//		for(int i=0;i<Box_Element;i++)  //複数のやつ
-//		{
+		for(int i=0;i<Box_Element;i++)  //複数のやつ
+		{
 		    //座標と個数の取得(MApより)
 			Box_Pos(&Box_x, &Box_y, Box_Element);
 
@@ -228,8 +232,8 @@ int Player_Move_Check()
 				//押された方向が 道かゴール なら　>>　Boxへ引数を渡す
 				if (MAP_Data(Box_nx, Box_ny) == E_Object_Load || MAP_Data(Box_nx, Box_ny) == E_Object_Goal)
 				{
-					Box_Move(Drct, Box_Element);
-					UI_Box_Move_History(Drct, Box_Element);			
+					Box_Move(Drct, i);
+					UI_Box_Move_History(Drct, i);	
 				}
 				//押された方向が 壁 なら　>>　動かない
 				if (MAP_Data(Box_nx, Box_ny) == E_Object_Wall)
@@ -244,7 +248,7 @@ int Player_Move_Check()
 					Drct_Count = 0;
 				}
 			}
-//  	}
+     	}
 
 	return 0;
 }
@@ -288,6 +292,7 @@ int Player_Move()
 		//フラグと向きの管理
 		Move_Flg = false;
 		Drct = E_Drct_None;
+		Argument_Check = 0;
 	}
 
 	return 0;
@@ -299,10 +304,33 @@ int Player_Back_Argument()
 	//BackSpaceが押されていないなら(プレイヤーが進んだら)　>>　プレイヤーの向きをUIへ渡す・歩数の増加
 	if (Back_Flg == false)
 	{
+		/*
+		if (Argument_Check == 0)
+		{
+			//何も動かない場合
+		}
+		if (Argument_Check == 1)
+		{
+			//プレイヤーのみ動く場合
+			UI_Player_Move_History(Drct);   //プレイヤーの向きを渡す
+			UI_StepCount_MoveOn();   //ステップカウントを増やす
+		}
+		if (Argument_Check == 2)
+		{
+			//プレイヤーとボックスが動く場合
+			UI_Player_Move_History(Drct);   //プレイヤーの向きを渡す
+			
+			Box_Move(Drct, Box_Element);
+			UI_Box_Move_History(Drct, Box_Element);
+			UI_StepCount_MoveOn();   //ステップカウントを増やす
+		}
+		*/
 
-		UI_Player_Move_History(Drct);   //プレイヤーの向きを渡す
-		UI_StepCount_MoveOn();   //ステップカウントを増やす
-
+		if (Argument_Check == 1)
+		{
+			UI_StepCount_MoveOn();
+			Argument_Check = 2;
+		}
 		/*
 		UI_StepCount_MoveOn();は呼び出されている(歩数が増減する為)
 		BackSpaceを押した際に同じif文の中にあるstepcount--は動作している(UIの34行目～
@@ -316,6 +344,9 @@ int Player_Back_Argument()
 		//BackSpaceが押されていない状態へ
 		Back_Flg = false;
 	}
+
+	//初期化
+	//Argument_Check = 0;
 
 	//向き用カウントの初期化
 	Drct_Count = 0;
@@ -333,6 +364,8 @@ int Player_Back_Move(E_Drct Old_Drct) {
 
 	//向きを反転させる
 	Drct = (E_Drct)((Old_Drct + 2) % 4);
+
+	Argument_Check = 4;
 
 	//向きに合わせて移動する
 	switch (Drct) 
