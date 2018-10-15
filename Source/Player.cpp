@@ -57,7 +57,8 @@
 	int Judge_y;     //Boxの縦の移動先を判断する
 
 	//個数管理
-	int Box_Element;  //Boxの要素数
+	int Box_Max;  //Boxの最大数
+	int Box_num;  //何個目のBoxか
 
 
 /**********************************　初期化(一回)　******************************************/
@@ -106,7 +107,8 @@ int Player_Init()
 	Judge_y = 0;
 
 	//個数管理
-	//Box_Element =
+	Box_Max = MAP_Box_Count_Init();
+	Box_num = 0;
 
 	return 0;
 }
@@ -200,10 +202,10 @@ int Player_Move_Check()
 
 	//Box
 		//コメントアウトを外すと多分複数対応
-		//for(int i=0;i<Box_Element;i++)  //複数のやつ
-		//{
+		for(int i=0;i<Box_Max;i++)  //複数のやつ
+		{
 		    //座標と個数の取得(MApより)
-			Box_Pos(&Box_x, &Box_y, Box_Element);
+			Box_Pos(&Box_x, &Box_y, Box_num);
 
 			//移動先が Box なら　>>　Boxを動かせるか判断
 			if (Player.nx == Box_x && Player.ny == Box_y)
@@ -219,10 +221,12 @@ int Player_Move_Check()
 				//押された方向が 道かゴール なら　>>　Boxへ引数を渡す
 				if (MAP_Data(Box_nx, Box_ny) == E_Object_Load || MAP_Data(Box_nx, Box_ny) == E_Object_Goal)
 				{
-					Box_Move(Drct, Box_Element);
-					UI_Box_Move_History(Drct, Box_Element);
+					//Box_Move(Drct, Box_Max);
+					//UI_Box_Move_History(Drct, Box_Max);
+					Box_Move(Drct, i);
+					UI_Box_Move_History(Drct, i);
 
-					//Box_Elementをiに変えると多分複数対応
+					//Box_Maxをiに変えると多分複数対応
 				}
 				//押された方向が 壁 なら　>>　動かない
 				if (MAP_Data(Box_nx, Box_ny) == E_Object_Wall)
@@ -234,7 +238,7 @@ int Player_Move_Check()
 					Drct = E_Drct_None;
 				}
 			}
-     	//}
+     	}
 
 	return 0;
 }
@@ -401,7 +405,7 @@ int Player_Draw()
 	DrawFormatString(70, 20, GetColor(255, 0, 0), "0:上 1:右 2:下 3:左 4:通常");
 	DrawFormatString(320, 20, GetColor(255, 0, 0), "Drct:%d", Drct);
 	DrawFormatString(420, 20, GetColor(255, 0, 0), "MoveFlg:%d", Move_Flg);
-	//DrawFormatString(70, 40, GetColor(255, 0, 0), "個数:%d", Box_Element);
+	DrawFormatString(70, 40, GetColor(255, 0, 0), "個数:%d", Box_Max);
 	DrawFormatString(70, 60, GetColor(255, 0, 0), "back_flg:%d", Back_Flg);
 
 #endif
