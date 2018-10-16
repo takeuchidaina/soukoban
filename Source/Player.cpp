@@ -207,28 +207,21 @@ int Player_Move_Check()
 					int Temp_y = 0;
 					Box_Pos(&Temp_x, &Temp_y, j);
 
-				//押された方向が 道かゴール なら　>>　Boxへ引数を渡す
-				if ((MAP_Data(Box_nx, Box_ny) == E_Object_Load || MAP_Data(Box_nx, Box_ny) == E_Object_Goal) || (Box_nx == Temp_x && Box_ny == Temp_y))
-				{
-					//Box_Move(Drct, i);  //向きと何個目のBoxか
-					//UI_Box_Move_History(Drct, i);
-				}
-
-
-
 					if (i != j)
 					{
-						//押された方向が 壁 なら　>>　動かない
+						//押された方向が 壁かBox なら　>>　動かない
 						if (MAP_Data(Box_nx, Box_ny) == E_Object_Wall || (Box_nx  == Temp_x && Box_ny == Temp_y))
 						{
 							//各キーフラグのfalse　>>  キー入力ができるようになる
 							Move_Flg = false;
 							Drct = E_Drct_None;
+							UI_Box_Move_History(Drct, i);
+							Argument_Check = 0;
 						}
 						else
 						{
 							Box_Move(Drct, i);  //向きと何個目のBoxか
-						UI_Box_Move_History(Drct, i);
+							UI_Box_Move_History(Drct, i);
 						}
 					}
 				}

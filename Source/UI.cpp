@@ -31,6 +31,8 @@ int UI_Dpct() {
 	if (Keyboard_Get(KEY_INPUT_BACK) == 1 && Player_Move_Flg() != true) {
 		if (StepCount > 0) {
 			//プレイヤーとボックスを動かす関数
+			UI_Player_Move_History(E_Drct_None);
+			History[StepCount].Box_Drct = E_Drct_None;
 			StepCount--;
 			Player_Back_Move(History[StepCount].Player_Drct);
 			if (History[StepCount].Box_Drct != E_Drct_None){
@@ -59,7 +61,7 @@ int UI_Draw() {
 	}
 #ifdef _DEBUG
 
-	DrawFormatString(300, 300, GetColor(122, 122, 255), "%d:%d", StepCount, History[StepCount-1].Player_Drct);
+	DrawFormatString(700, 500, GetColor(122, 122, 255), "歩数:%d/向き:%d", StepCount, History[StepCount-1].Player_Drct);
 
 #endif
 	return 0;
