@@ -16,6 +16,11 @@ int Box_Count;				//受け取るBoxの変数;
 static int Box_Pos_x[5];		//受け取るBoxのx座標変数
 static int Box_Pos_y[5];		//受け取るBoxのy座標変数
 int lflag;
+
+int ImageWall = 0;
+int ImageLoad = 0;
+int ImageGoal = 0;
+
 //5はdefineかconstで定義すべき
 //むしろ構造体を共通すべき
 
@@ -64,6 +69,12 @@ int MAP_Init() {
 	Box_Count = 1;	//受け取ったBoxの数の初期化
 //	Box_Pos_x = 5;	//受け取ったBoxのx座標の初期化
 //	Box_Pos_y = 5;	//受け取ったBoxのy座標の初期化
+
+	//画像の読み込み
+	ImageWall = LoadGraph("Images/Wall.png");
+	ImageLoad = LoadGraph("Images/Load.png");
+	ImageGoal = LoadGraph("Images/Goal.png");
+
 
 	// MAPの読み込み
 	FileHandle = FileRead_open("MAP/MAP_01.csv");	// 一行読み込み
@@ -163,18 +174,25 @@ int MAP_Draw() {
 	{
 		for (j = 0; j < MAP_WIDTH; j++)
 		{
-			if (MAP[i][j] == 0)
+			if (MAP[i][j] == E_Object_Wall)
 			{
-				DrawBox(j * MAP_SIZE, i * MAP_SIZE,
-					j * MAP_SIZE + MAP_SIZE, i * MAP_SIZE + MAP_SIZE,
-					GetColor(0, 230, 0), TRUE);
+				//DrawBox(j * MAP_SIZE, i * MAP_SIZE,j * MAP_SIZE + MAP_SIZE, i * MAP_SIZE + MAP_SIZE,GetColor(0, 230, 0), TRUE);
+
+				DrawGraph(j * MAP_SIZE, i * MAP_SIZE, ImageWall, TRUE);
+
 			}
-			if (MAP[i][j] == 1)
+			if (MAP[i][j] == E_Object_Load)
 			{
-				DrawBox(j * MAP_SIZE, i * MAP_SIZE,
-					j * MAP_SIZE + MAP_SIZE, i * MAP_SIZE + MAP_SIZE,
-					GetColor(122, 255, 122), TRUE);
+				//DrawBox(j * MAP_SIZE, i * MAP_SIZE,j * MAP_SIZE + MAP_SIZE, i * MAP_SIZE + MAP_SIZE,GetColor(122, 255, 122), TRUE);
+			
+				DrawGraph(j * MAP_SIZE, i * MAP_SIZE, ImageLoad, TRUE);
 				
+			}
+			if (MAP[i][j] == E_Object_Goal)
+			{
+				//DrawBox(j * MAP_SIZE, i * MAP_SIZE,j * MAP_SIZE + MAP_SIZE, i * MAP_SIZE + MAP_SIZE,GetColor(122, 122, 255), TRUE);
+
+				DrawGraph(j * MAP_SIZE, i * MAP_SIZE, ImageGoal, TRUE);
 			}
 		}
 	}

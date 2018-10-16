@@ -33,6 +33,14 @@ typedef enum {
 	E_Drct_None
 } E_Drct;  //Drct = Direction(向き)
 
+//オブジェクトの当たり判定用
+typedef enum
+{
+	E_Object_Wall,      //行けない場所
+	E_Object_Load,      //歩ける場所
+	E_Object_Goal,      //ゴール
+}E_Object;
+
 extern int Player_Back_Move(E_Drct);
 
 #endif

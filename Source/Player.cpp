@@ -9,13 +9,7 @@
 /**********************************　変数宣言　******************************************/
 //共通
 
-    //オブジェクトの当たり判定用
-	typedef enum
-	{
-		E_Object_Wall,      //行けない場所
-		E_Object_Load,      //歩ける場所
-		E_Object_Goal,      //ゴール
-	}E_Object;
+
 
 //Player
 
@@ -79,7 +73,7 @@ int Player_Init()
 
 	//画像
 	Gyallaly[12] = {};
-	LoadDivGraph("gazou/Player.png", 12, 3, 4, 64, 64, Gyallaly);  //配列「Gyallaly」へ画像を入れる
+	LoadDivGraph("Images/Player.png", 12, 3, 4, 64, 64, Gyallaly);  //配列「Gyallaly」へ画像を入れる
 			//LoadDivGraph("File/name.",画像の分割数,横の枚数,縦の枚数,画像のサイズx,画像のサイズy,配列名)
 	None_Num = 7;    //スタンバイ状態の向いてる方向を正面へするための画像番号7
 	Player_Image = 0;
@@ -183,7 +177,7 @@ int Player_Move_Check()
 			if (Argument_Check == 0)
 			{
 				UI_Player_Move_History(Drct);
-				Argument_Check = 1;   //プレイヤーが動く
+				Argument_Check = 1;   //歩数が増える
 			}
 		}
 
@@ -196,7 +190,7 @@ int Player_Move_Check()
 		}
 
 	//Box
-		//コメントアウトを外すと多分複数対応
+
 		for(int i=0;i<Box_Max;i++)  //複数のやつ
 		{
 		    //座標と個数の取得(MApより)
@@ -216,7 +210,7 @@ int Player_Move_Check()
 				//押された方向が 道かゴール なら　>>　Boxへ引数を渡す
 				if (MAP_Data(Box_nx, Box_ny) == E_Object_Load || MAP_Data(Box_nx, Box_ny) == E_Object_Goal)
 				{
-					Box_Move(Drct, i);
+					Box_Move(Drct, i);  //向きと何個目のBoxか
 					UI_Box_Move_History(Drct, i);
 				}
 				//押された方向が 壁 なら　>>　動かない

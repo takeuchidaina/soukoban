@@ -101,7 +101,7 @@ int Box_Bectl(int *x, int *y, int num) {
 int Box_Init() {
 	//ここで初期化をする
 	
-	Handle = LoadGraph("gazou/block.png"); // 画像をロード
+	Handle = LoadGraph("Images/Box.png"); // 画像をロード
 
 	yousosuu =  MAP_Box_Count_Init();
 	
@@ -244,7 +244,7 @@ int Box_Draw() {
 		}
 	}
 
-	DrawFormatString(250, 80, GetColor(255, 0, 0), "box[0].bx:%d", box[0].bx);
+	//DrawFormatString(250, 80, GetColor(255, 0, 0), "box[0].bx:%d", box[0].bx);
 	
 	return 0;
 }
