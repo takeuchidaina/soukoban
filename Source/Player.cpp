@@ -29,10 +29,6 @@
 
 	//向き
 	E_Drct Drct;     //向きの管理
-	bool Up_Flg;     //上 (キー入力されたら向きやcount_yの管理を行う)
-	bool Down_Flg;   //下 (キー入力されたら向きやcount_yの管理を行う)
-	bool Right_Flg;  //右 (キー入力されたら向きやcount_xの管理を行う)
-	bool Left_Flg;   //左 (キー入力されたら向きやcount_xの管理を行う)
 
 	//画像
 	int None_Num;        //画像のスタンバイ状態(静止状態)
@@ -80,10 +76,6 @@ int Player_Init()
 
 	//向き
 	Drct = E_Drct_None;  //向き:無し
-	Up_Flg = false;      //キー入力されていない
-	Down_Flg = false;    //キー入力されていない
-	Right_Flg = false;   //キー入力されていない
-	Left_Flg = false;    //キー入力されていない
 
 	//画像
 	Gyallaly[12] = {};
@@ -198,8 +190,6 @@ int Player_Move_Check()
 		//移動先が 壁 なら　>>　動かない
 		if (MAP_Data(Player.nx, Player.ny) == E_Object_Wall)
 		{
-			//壁なら動作させない
-
 			//各キーフラグのfalse　>>  キー入力ができるようになる
 			Move_Flg = false;
 			Drct = E_Drct_None;
@@ -226,18 +216,12 @@ int Player_Move_Check()
 				//押された方向が 道かゴール なら　>>　Boxへ引数を渡す
 				if (MAP_Data(Box_nx, Box_ny) == E_Object_Load || MAP_Data(Box_nx, Box_ny) == E_Object_Goal)
 				{
-					Box_Move(Drct, Box_Max);
-					UI_Box_Move_History(Drct, Box_Max);
-					//Box_Move(Drct, i);
-					//UI_Box_Move_History(Drct, i);
-
-					//Box_Maxをiに変えると多分複数対応
+					Box_Move(Drct, i);
+					UI_Box_Move_History(Drct, i);
 				}
 				//押された方向が 壁 なら　>>　動かない
 				if (MAP_Data(Box_nx, Box_ny) == E_Object_Wall)
 				{
-					//壁なら動作させない
-
 					//各キーフラグのfalse　>>  キー入力ができるようになる
 					Move_Flg = false;
 					Drct = E_Drct_None;
