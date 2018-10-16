@@ -7,9 +7,6 @@
 
 
 /**********************************　変数宣言　******************************************/
-//共通
-
-
 
 //Player
 
@@ -43,7 +40,7 @@
 	int Box_nx;      //仮の x 座標
 	int Box_ny;      //仮の y 座標
 	
-	S_Box Box[5];
+	//S_Box Box[5];
 
 	//移動先の判断
 	int Judge_x;     //Boxの横の移動先を判断する
@@ -51,7 +48,6 @@
 
 	//個数管理
 	int Box_Max;  //Boxの最大数
-	int Box_num;  //何個目のBoxか
 
 
 /**********************************　初期化(一回)　******************************************/
@@ -99,7 +95,6 @@ int Player_Init()
 
 	//個数管理
 	Box_Max = MAP_Box_Count_Init();
-	Box_num = 0;
 
 	return 0;
 }
@@ -193,8 +188,8 @@ int Player_Move_Check()
 
 		for(int i=0;i<Box_Max;i++)  //複数のやつ
 		{
-		    //座標と個数の取得(MApより)
-			Box_Pos(&Box_x, &Box_y, Box_num);
+		    //座標と何個目かの取得(MAPより)
+			Box_Pos(&Box_x, &Box_y, i);
 
 			//移動先が Box なら　>>　Boxを動かせるか判断
 			if (Player.nx == Box_x && Player.ny == Box_y)
@@ -206,19 +201,36 @@ int Player_Move_Check()
 				//仮の変数(nx/ny)に代入
 				Box_nx = Box_x + Judge_x;
 				Box_ny = Box_y + Judge_y;
+				for (int j = 0; j < Box_Max; j++)
+				{
+					int Temp_x = 0;
+					int Temp_y = 0;
+					Box_Pos(&Temp_x, &Temp_y, j);
 
 				//押された方向が 道かゴール なら　>>　Boxへ引数を渡す
-				if (MAP_Data(Box_nx, Box_ny) == E_Object_Load || MAP_Data(Box_nx, Box_ny) == E_Object_Goal)
+				if ((MAP_Data(Box_nx, Box_ny) == E_Object_Load || MAP_Data(Box_nx, Box_ny) == E_Object_Goal) || (Box_nx == Temp_x && Box_ny == Temp_y))
 				{
-					Box_Move(Drct, i);  //向きと何個目のBoxか
-					UI_Box_Move_History(Drct, i);
+					//Box_Move(Drct, i);  //向きと何個目のBoxか
+					//UI_Box_Move_History(Drct, i);
 				}
-				//押された方向が 壁 なら　>>　動かない
-				if (MAP_Data(Box_nx, Box_ny) == E_Object_Wall)
-				{
-					//各キーフラグのfalse　>>  キー入力ができるようになる
-					Move_Flg = false;
-					Drct = E_Drct_None;
+
+
+
+					if (i != j)
+					{
+						//押された方向が 壁 なら　>>　動かない
+						if (MAP_Data(Box_nx, Box_ny) == E_Object_Wall || (Box_nx  == Temp_x && Box_ny == Temp_y))
+						{
+							//各キーフラグのfalse　>>  キー入力ができるようになる
+							Move_Flg = false;
+							Drct = E_Drct_None;
+						}
+						else
+						{
+							Box_Move(Drct, i);  //向きと何個目のBoxか
+						UI_Box_Move_History(Drct, i);
+						}
+					}
 				}
 			}
      	}
@@ -334,7 +346,6 @@ int Player_Draw()
 {
 	//MAP_SIZEをかけることによってマスの移動処理が1マスなら+1をすれば64ずれるというように楽になる
 
-
 	//キー入力されてない時の画像表示
 	if (Drct == E_Drct_None)
 	{
@@ -385,11 +396,19 @@ int Player_Draw()
 
 #ifdef _DEBUG
 
-	DrawFormatString(70, 20, GetColor(255, 0, 0), "0:上 1:右 2:下 3:左 4:通常");
-	DrawFormatString(320, 20, GetColor(255, 0, 0), "Drct:%d", Drct);
-	DrawFormatString(420, 20, GetColor(255, 0, 0), "MoveFlg:%d", Move_Flg);
-	DrawFormatString(70, 40, GetColor(255, 0, 0), "個数:%d", Box_Max);
-	DrawFormatString(70, 60, GetColor(255, 0, 0), "back_flg:%d", Back_Flg);
+	DrawFormatString(700,  20, GetColor(255, 0, 0), "0:上 1:右 2:下 3:左 4:通常");
+	DrawFormatString(700,  40, GetColor(255, 0, 0), "Drct:%d", Drct);
+	DrawFormatString(700,  60, GetColor(255, 0, 0), "MoveFlg:%d", Move_Flg);
+
+	DrawFormatString(700,  120, GetColor(255, 0, 0), "Boxの最大個数:%d", Box_Max);
+	DrawFormatString(700, 160, GetColor(255, 0, 0), "Box_x:%d", Box_x);
+	DrawFormatString(700, 180, GetColor(255, 0, 0), "Box_y:%d", Box_y);
+	DrawFormatString(700, 200, GetColor(255, 0, 0), "Box_nx:%d", Box_nx);
+	DrawFormatString(700, 220, GetColor(255, 0, 0), "Box_ny:%d", Box_ny);
+	DrawFormatString(700, 240, GetColor(255, 0, 0), "Judge_x:%d", Judge_x);
+	DrawFormatString(700, 260, GetColor(255, 0, 0), "Judge_y:%d", Judge_y);
+
+	DrawFormatString(700, 300, GetColor(255, 0, 0), "Argument_Check:%d", Argument_Check);
 
 #endif
 
