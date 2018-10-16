@@ -47,10 +47,13 @@
 //Box
 
 	//Boxの座標
+	
 	int Box_x;       // x 座標
 	int Box_y;       // y 座標
 	int Box_nx;      //仮の x 座標
 	int Box_ny;      //仮の y 座標
+	
+	S_Box Box[5];
 
 	//移動先の判断
 	int Judge_x;     //Boxの横の移動先を判断する
@@ -97,10 +100,12 @@ int Player_Init()
  //Box
 
 	//座標
+	
 	Box_x = 0;
 	Box_y = 0;
 	Box_nx = 0;
 	Box_ny = 0;
+	
 
 	//移動
 	Judge_x = 0;
@@ -114,7 +119,7 @@ int Player_Init()
 }
 
 
-/**********************************　計算(毎回)　******************************************/
+/**********************************　計算(毎回) ******************************************/
 int Player_Dpct()
 {
 
@@ -221,10 +226,10 @@ int Player_Move_Check()
 				//押された方向が 道かゴール なら　>>　Boxへ引数を渡す
 				if (MAP_Data(Box_nx, Box_ny) == E_Object_Load || MAP_Data(Box_nx, Box_ny) == E_Object_Goal)
 				{
-					//Box_Move(Drct, Box_Max);
-					//UI_Box_Move_History(Drct, Box_Max);
-					Box_Move(Drct, i);
-					UI_Box_Move_History(Drct, i);
+					Box_Move(Drct, Box_Max);
+					UI_Box_Move_History(Drct, Box_Max);
+					//Box_Move(Drct, i);
+					//UI_Box_Move_History(Drct, i);
 
 					//Box_Maxをiに変えると多分複数対応
 				}
@@ -269,7 +274,7 @@ int Player_Move()
 
 
 	//count_x/count_yのどれかのカウントが±64なら　>>　Player.x/yの座標更新・カウントとフラグの初期化
-	if (count_x >= MAP_SIZE || count_y <= -MAP_SIZE || count_x <= -MAP_SIZE || count_y >= MAP_SIZE)
+	if (count_x >= MAP_SIZE-1 || count_y <= -MAP_SIZE+1 || count_x <= -MAP_SIZE+1 || count_y >= MAP_SIZE-1)
 	{
 		//プレイヤーの座標に仮の座標を代入して座標を更新(描画の際に使うのはPlayer.x/.y)
 		Player.y = Player.ny;
