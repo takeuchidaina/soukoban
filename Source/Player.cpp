@@ -40,6 +40,7 @@
 	int Box_nx;      //仮の x 座標
 	int Box_ny;      //仮の y 座標
 	
+	int BoxLoopEndFlag;
 	//S_Box Box[5];
 
 	//移動先の判断
@@ -95,6 +96,8 @@ int Player_Init()
 
 	//個数管理
 	Box_Max = MAP_Box_Count_Init();
+
+	BoxLoopEndFlag = 0;
 
 	return 0;
 }
@@ -216,12 +219,18 @@ int Player_Move_Check()
 							Move_Flg = false;
 							Drct = E_Drct_None;
 							UI_Box_Move_History(Drct, i);
-							Argument_Check = 0;
+							//Argument_Check = 0;
+							
 						}
 						else
 						{
-							Box_Move(Drct, i);  //向きと何個目のBoxか
-							UI_Box_Move_History(Drct, i);
+							if (Argument_Check == 1) {
+								Argument_Check = 2;
+								Box_Move(Drct, i);  //向きと何個目のBoxか
+								UI_Box_Move_History(Drct, i);
+								return 0;
+
+							}
 						}
 					}
 				}
@@ -282,10 +291,10 @@ int Player_Back_Argument()
 	//BackSpaceが押されていないなら(プレイヤーが進んだら)　>>　プレイヤーの向きをUIへ渡す・歩数の増加
 	if (Back_Flg == false)
 	{
-		if (Argument_Check == 1)
+		if (Argument_Check == 1 || Argument_Check == 2)
 		{
 			UI_StepCount_MoveOn();
-			Argument_Check = 2;
+			Argument_Check = 3;
 		}
 	}
 

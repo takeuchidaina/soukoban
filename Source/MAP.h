@@ -19,4 +19,6 @@ int MAP_Box_Count_Init();      //Box‚ÌŒÂ”
 int MAP_Box_Pos_Init_x(int);      //Box‚Ì‰ŠúXÀ•W
 int MAP_Box_Pos_Init_y(int);	   //Box‚Ì‰ŠúYÀ•W
 
+void MAP_Set_Handleflag(int);
+
 #endif
