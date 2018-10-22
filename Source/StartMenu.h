@@ -9,8 +9,8 @@ typedef struct {
 	int Title;
 	int Start;
 	int On_Start;
-	int Stage;
-	int On_Stage;
+	int MAP;
+	int On_MAP;
 	int End;
 	int On_End;
 	int BG;

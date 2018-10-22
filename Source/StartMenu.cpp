@@ -20,11 +20,11 @@ int StartMenu_Init() {
 	 SelectNum = 0; // åªç›ÇÃëIëî‘çÜ
 	 Image.Title = LoadGraph("Images/Title.png");
 	 Image.Start = LoadGraph("Images/Start.png");
-	 Image.Stage = LoadGraph("Images/MAP.png");
+	 Image.MAP = LoadGraph("Images/MAP.png");
 	 Image.End = LoadGraph("Images/End.png");
 
 	 Image.On_Start = LoadGraph("Images/OnStart.png");
-	 Image.On_Stage = LoadGraph("Images/OnMAP.png");
+	 Image.On_MAP = LoadGraph("Images/OnMAP.png");
 	 Image.On_End = LoadGraph("Images/OnEnd.png");
 
 	 Image.BG = LoadGraph("Images/BackGround.png");
@@ -77,19 +77,19 @@ int StartMenu_Draw() {
 	{
 	case 0:
 		DrawGraph(MenuElement[0].x, MenuElement[0].y, Image.On_Start, TRUE);
-		DrawGraph(MenuElement[1].x, MenuElement[1].y, Image.Stage, TRUE);
+		DrawGraph(MenuElement[1].x, MenuElement[1].y, Image.MAP, TRUE);
 		DrawGraph(MenuElement[2].x, MenuElement[2].y, Image.End, TRUE);
 		break;
 	case 1:
 	case -1:
 		DrawGraph(MenuElement[0].x, MenuElement[0].y, Image.Start, TRUE);
-		DrawGraph(MenuElement[1].x, MenuElement[1].y, Image.On_Stage, TRUE);
+		DrawGraph(MenuElement[1].x, MenuElement[1].y, Image.On_MAP, TRUE);
 		DrawGraph(MenuElement[2].x, MenuElement[2].y, Image.End, TRUE);
 		break;
 	case 2:
 	case -2:
 		DrawGraph(MenuElement[0].x, MenuElement[0].y, Image.Start, TRUE);
-		DrawGraph(MenuElement[1].x, MenuElement[1].y, Image.Stage, TRUE);
+		DrawGraph(MenuElement[1].x, MenuElement[1].y, Image.MAP, TRUE);
 		DrawGraph(MenuElement[2].x, MenuElement[2].y, Image.On_End, TRUE);
 		break;
 
