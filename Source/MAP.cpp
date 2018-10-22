@@ -3,6 +3,9 @@
 #include "MAP.h"
 #include "Box.h"
 #include "Player.h"
+#include "Scene_Mgr.h"
+
+
 
 int FileHandle, y;
 static int i = 0, j = 0;
@@ -11,8 +14,8 @@ char c1, c2;				//MAPとPlayer,Boxに使うchar
 int MAP[MAP_HEIGHT][MAP_WIDTH];  //マップ
 int px, py;					//受け取るプレイヤーの変数
 int Box_Count;				//受け取るBoxの変数;
-static int Box_Pos_x[5];		//受け取るBoxのx座標変数
-static int Box_Pos_y[5];		//受け取るBoxのy座標変数
+static int Box_Pos_x[10];		//受け取るBoxのx座標変数
+static int Box_Pos_y[10];		//受け取るBoxのy座標変数
 int lflag;
 
 int ImageWall = 0;
@@ -23,7 +26,7 @@ char MAPHandle[256];
 int Handleflag = 1;
 
 
-//5はdefineかconstで定義すべき
+//10はdefineかconstで定義すべき
 //むしろ構造体を共通すべき
 
 
@@ -66,25 +69,33 @@ int MAP_Box_Pos_Init_y(int num) {
 //初期化
 int MAP_Init() {
 	memset(MAP, -1, sizeof(MAP));
-	px = px;			//受け取ったプレイヤーのx座標を初期化
-	py = py;			//受け取ったプレイヤーのy座標を初期化
+//	px = px;			//受け取ったプレイヤーのx座標を初期化
+//	py = py;			//受け取ったプレイヤーのy座標を初期化
 	Box_Count = 1;	//受け取ったBoxの数の初期化
 //	Box_Pos_x = 5;	//受け取ったBoxのx座標の初期化
 //	Box_Pos_y = 5;	//受け取ったBoxのy座標の初期化
+	i = 0; j = 0;
 
 	//画像の読み込み
 	ImageWall = LoadGraph("Images/Wall.png");
 	ImageLoad = LoadGraph("Images/Load.png");
 	ImageGoal = LoadGraph("Images/Goal.png");
 
-	strcpy(MAPHandle, "MAP/MAP_0");
+	strcpy(MAPHandle, "MAP/MAP_");
 	
 
 	char Handletmp[256];
+
+	char flagtmp[256];
+	sprintf(flagtmp, "%d", Handleflag);
+
+
+
+	/*
 	char flagtmp[64];	//突貫 合計１０（９）マップまで
 	flagtmp[0] = Handleflag + '0';
 	flagtmp[1] = NULL;
-
+	*/
 	strcpy(Handletmp, MAPHandle);
 
 	strcat(Handletmp, flagtmp);
@@ -94,10 +105,12 @@ int MAP_Init() {
 	// MAPの読み込み
 	FileHandle = FileRead_open( Handletmp );	// 一行読み込み
 													// ファイルの終端が来るまで表示する
-	if (FileHandle == -1) {
+	if (FileHandle == 0) {
 
-		DrawFormatString(100, 220, GetColor(255, 0, 0), "erararara");
-		WaitKey();
+//		WaitKey();
+		Scene_Mgr_ChangeScene(E_Scene_StartMenu);
+		return -1;
+
 	}
 
 	while (FileRead_eof(FileHandle) == 0) {			// 一行読み込み
@@ -130,10 +143,12 @@ int MAP_Init() {
 	// Playerの座標読み込み
 	FileHandle = FileRead_open( Handletmp );	//1行読み込み
 													// ファイルの終端が来るまで表示する
-	if (FileHandle == -1) {
+	if (FileHandle == 0) {
 
-		DrawFormatString(100, 220, GetColor(255, 0, 0), "エラー");
-		WaitKey();
+//		WaitKey();
+		Scene_Mgr_ChangeScene(E_Scene_StartMenu);
+		return -1;
+
 	}
 
 	//c2 = PlayerとBoxのchar
@@ -233,5 +248,9 @@ int MAP_GetHandleflag() {
 
 //終了
 int MAP_End() {
+	DeleteGraph(ImageWall);
+	DeleteGraph(ImageLoad);
+	DeleteGraph(ImageGoal);
+
 	return 0;
 }

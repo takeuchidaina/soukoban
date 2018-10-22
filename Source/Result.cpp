@@ -4,6 +4,7 @@
 #include "StartMenu.h"
 #include "Keyboard.h"
 #include "Scene_Mgr.h"
+#include "MAP.h"
 
 
 MenuElement_t ResultMenuElement[MENU_ELEMENT_MAX]{
@@ -44,10 +45,19 @@ int Result_Dpct() {
 			ResultMenuElement[i].x = 80; // 座標を80にする
 			if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {	//座標が80になっている項目でスペースキーを押すと
 														//その項目の中に入る
+				int tmp;
 				switch (i) {
 				case 0:
+					//次のステージへ
+					tmp = MAP_GetHandleflag();
+					if (tmp == MAP_MAX) {
+						Scene_Mgr_ChangeScene(E_Scene_StartMenu);
+					}
+					else {
+						MAP_SetHandleflag(tmp + 1);
+						Scene_Mgr_ChangeScene(E_Scene_Game);
+					}
 					break;
-
 				case 1:
 					Scene_Mgr_ChangeScene(E_Scene_StartMenu);
 					break;

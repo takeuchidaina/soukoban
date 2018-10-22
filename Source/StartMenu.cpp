@@ -6,7 +6,7 @@
 
 MenuElement_t MenuElement[3] = {
 { 100, 100, "ゲームスタート" }, // タグの中身の順番で格納される。xに100が、yに100が、nameに"ゲームスタート"が
-{ 100, 200, "ヘルプ" },
+{ 100, 200, "ステージセレクト" },
 { 100, 300, "ゲーム終了" },
 };
 
@@ -25,7 +25,7 @@ int StartMenu_Dpct() {
 	//Dqctは毎フレーム呼ばれる
 
 	if (Keyboard_Get(KEY_INPUT_UP) == 1) {
-		SelectNum = (SelectNum - 1) % 3;	// 現在の選択項目を一つ上にずらす
+		SelectNum = (SelectNum+ sizeof(MenuElement)/sizeof*(MenuElement)-1) % 3;	// 現在の選択項目を一つ上にずらす
 	}
 
 	if (Keyboard_Get(KEY_INPUT_DOWN) == 1) {
@@ -41,7 +41,7 @@ int StartMenu_Dpct() {
 						Scene_Mgr_ChangeScene(E_Scene_Game);
 						break;
 					case 1:
-						//ヘルプってなんや、ヘルプ画面作らんといかんのか。むしろステージセレクトやろ。
+						Scene_Mgr_ChangeScene(E_Scene_MAPSelect);
 						break;
 					case 2:
 						Scene_Mgr_End();

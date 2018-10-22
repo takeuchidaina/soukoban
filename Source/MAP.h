@@ -6,6 +6,8 @@
 #define MAP_WIDTH	10			// マップの幅
 #define MAP_HEIGHT	8			// マップの縦長さ
 
+#define MAP_MAX 3
+
 extern int MAP_Init();
 extern int MAP_Dpct();
 extern int MAP_Draw();
@@ -19,6 +21,7 @@ int MAP_Box_Count_Init();      //Boxの個数
 int MAP_Box_Pos_Init_x(int);      //Boxの初期X座標
 int MAP_Box_Pos_Init_y(int);	   //Boxの初期Y座標
 
-void MAP_Set_Handleflag(int);
+int MAP_GetHandleflag();
+void MAP_SetHandleflag(int);
 
 #endif

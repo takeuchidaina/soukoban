@@ -6,6 +6,7 @@
 #include "MAP.h"
 #include "UI.h"
 #include "Result.h"
+#include "MAPSelect.h"
 
 
 static E_Scene Sceneflag = E_Scene_StartMenu;		//今のシーン
@@ -50,6 +51,10 @@ void Scene_Mgr_Dpct() {
 	case E_Scene_GameMenu:
 		//ゲームメニュー
 		break;
+	case E_Scene_MAPSelect:
+		//ステージセレクト
+		MAPSelect_Dpct();
+		break;
 	}
 }
 
@@ -79,6 +84,11 @@ void Scene_Mgr_Draw() {
 		//ゲームメニュー
 		DrawFormatString(0, 00, GetColor(255, 255, 255), "ゲームメニュー");
 		break;
+	case E_Scene_MAPSelect:
+		//ステージセレクト
+		MAPSelect_Draw();
+		break;
+
 	}
 }
 
@@ -94,14 +104,16 @@ void Scene_Mgr_ChangeScene(E_Scene NextScene) {
 
 //指定モジュールの初期化をする
 static void Scene_Mgr_Init_Module(E_Scene scene) {
-	switch (Sceneflag) {
+	switch (scene) {
 	case E_Scene_StartMenu:
 		//スタートメニュー
 		StartMenu_Init();
 		break;
 	case E_Scene_Game:
 		//ゲーム画面
-		MAP_Init();
+		if (MAP_Init() == -1) {
+			break;
+		}
 		Player_Init();
 		Box_Init();
 		UI_Init();
@@ -113,13 +125,18 @@ static void Scene_Mgr_Init_Module(E_Scene scene) {
 	case E_Scene_GameMenu:
 		//ゲームメニュー
 		break;
+	case E_Scene_MAPSelect:
+		//ステージセレクト
+		MAPSelect_Init();
+		break;
+
 	}
 
 }
 
 //指定モジュールの終了処理を行う
 static void Scene_Mgr_End_Module(E_Scene scene) {
-	switch (Sceneflag) {
+	switch (scene) {
 	case E_Scene_StartMenu:
 		//スタートメニュー
 		StartMenu_End();
@@ -138,6 +155,11 @@ static void Scene_Mgr_End_Module(E_Scene scene) {
 	case E_Scene_GameMenu:
 		//ゲームメニュー
 		break;
+	case E_Scene_MAPSelect:
+		//ステージセレクト
+		MAPSelect_End();
+		break;
+
 	}
 
 }

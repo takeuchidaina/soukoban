@@ -10,8 +10,8 @@
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	SetMainWindowText("倉庫BAN");
-//	SetWindowSize(1280, 720);
-//	SetGraphMode(1280,720,32);
+	SetWindowSize(1280, 720);
+	SetGraphMode(1280,720,32);
 	ChangeWindowMode(TRUE), DxLib_Init(), SetDrawScreen(DX_SCREEN_BACK); //ウィンドウモード変更と初期化と裏画面設定
 
 	//初期化管理関数の呼び出し
