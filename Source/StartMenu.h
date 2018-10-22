@@ -14,6 +14,17 @@ typedef struct {
 	int End;
 	int On_End;
 	int BG;
+	int Clear_RD;
+	int Clear_YER;
+	int Step;
+	int Steped;
+	int Number;
+	int On_Number;
+	int Back;
+	int On_Back;
+	int NextStage;
+	int On_NextStage;
+
 } Image_t;
 
 extern int StartMenu_Init();
