@@ -19,6 +19,7 @@ int Box_Move_Flg = OFF;		//動くか動かないか
 int Box_Count_x = 0;	//ヌルヌル動かす
 int Box_Count_y = 0;   // ヌルヌル動かす
 int Handle;				//// データハンドル格納用変数
+int Handle2;
 int Box_Clear_Flg = OFF;		//ボックスがゴールの座標と一致しているかどうかのフラグ
 int Box_Back_Flg;			//ボックスの座標を一つ前に戻す
 
@@ -102,7 +103,7 @@ int Box_Init() {
 	//ここで初期化をする
 	
 	Handle = LoadGraph("Images/Box.png"); // 画像をロード
-
+	Handle2 = LoadGraph("Images/Clear_Box.png");
 	yousosuu =  MAP_Box_Count_Init();
 	
 	
@@ -235,13 +236,22 @@ int Box_Draw() {
 	yousosuu = MAP_Box_Count_Init();
 
 	for (i = 0; i < yousosuu; i++) {
-		if (i != moveNumber) {
-			DrawGraph(box[i].x * MAP_SIZE , box[i].y * MAP_SIZE , Handle, TRUE); // データハンドルを使って画像を描画
-					//(boxのx座標 * map_size(64) + count.x(1マス）, boxのy座標 * map_size(64) + count.y(1マス）)
-		}
-		else {
-			DrawGraph(box[i].x * MAP_SIZE + Box_Count_x, box[i].y * MAP_SIZE + Box_Count_y, Handle, TRUE); // データハンドルを使って画像を描画
-		}
+		if (MAP_Data(box[i].x, box[i].y) != 2) {
+			if (i != moveNumber) {
+				DrawGraph(box[i].x * MAP_SIZE, box[i].y * MAP_SIZE, Handle, TRUE); // データハンドルを使って画像を描画
+						//(boxのx座標 * map_size(64) + count.x(1マス）, boxのy座標 * map_size(64) + count.y(1マス）)
+			}
+			else {
+					DrawGraph(box[i].x * MAP_SIZE + Box_Count_x, box[i].y * MAP_SIZE + Box_Count_y, Handle, TRUE); // データハンドルを使って画像を描画
+			}
+		}else
+			if (i != moveNumber) {
+				DrawGraph(box[i].x * MAP_SIZE, box[i].y * MAP_SIZE, Handle2, TRUE); // データハンドルを使って画像を描画
+																				   //(boxのx座標 * map_size(64) + count.x(1マス）, boxのy座標 * map_size(64) + count.y(1マス）)
+			}
+			else {
+				DrawGraph(box[i].x * MAP_SIZE + Box_Count_x, box[i].y * MAP_SIZE + Box_Count_y, Handle, TRUE); // データハンドルを使って画像を描画
+			}
 	}
 
 	//DrawFormatString(250, 80, GetColor(255, 0, 0), "box[0].bx:%d", box[0].bx);

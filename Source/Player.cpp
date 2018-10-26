@@ -40,6 +40,7 @@
 	int Box_nx;      //仮の x 座標
 	int Box_ny;      //仮の y 座標
 	
+	int BoxLoopEndFlag;
 	//S_Box Box[5];
 
 	//移動先の判断
@@ -96,6 +97,8 @@ int Player_Init()
 	//個数管理
 	Box_Max = MAP_Box_Count_Init();
 
+	BoxLoopEndFlag = 0;
+
 	return 0;
 }
 
@@ -117,25 +120,25 @@ int Player_Dpct()
 	//キー入力処理
 
 		//上
-		if (Keyboard_Get(KEY_INPUT_UP) == 1)   //↑
+		if (Keyboard_Get(KEY_INPUT_UP) >= 1)   //↑
 		{
 			Player.ny--;    //プレイヤーの仮の変数nyの座標が-1(-MAP_SIZE)される
 			Drct = E_Drct_Up;
 		}
 		//左
-		if (Keyboard_Get(KEY_INPUT_LEFT) == 1)  //←
+		else if (Keyboard_Get(KEY_INPUT_LEFT) >= 1)  //←
 		{
 			Player.nx--;      //プレイヤーの仮の変数nxのx座標が-1(-MAP_SIZE)される
 			Drct = E_Drct_Left;
 		}
 		//下
-		if (Keyboard_Get(KEY_INPUT_DOWN) == 1)  //↓
+		else if (Keyboard_Get(KEY_INPUT_DOWN) >= 1)  //↓
 		{
 			Player.ny++;      //プレイヤーの仮の変数nyのy座標が+1(+MAP_SIZE)される
 			Drct = E_Drct_Down;
 		}
 		//右
-		if (Keyboard_Get(KEY_INPUT_RIGHT) == 1) //→
+		else if (Keyboard_Get(KEY_INPUT_RIGHT) >= 1) //→
 		{
 			Player.nx++;       //プレイヤーの仮の変数nxのx座標が+1(+MAP_SIZE)される
 			Drct = E_Drct_Right;
@@ -216,12 +219,18 @@ int Player_Move_Check()
 							Move_Flg = false;
 							Drct = E_Drct_None;
 							UI_Box_Move_History(Drct, i);
-							Argument_Check = 0;
+							//Argument_Check = 0;
+							
 						}
 						else
 						{
-							Box_Move(Drct, i);  //向きと何個目のBoxか
-							UI_Box_Move_History(Drct, i);
+							if (Argument_Check == 1) {
+								Argument_Check = 2;
+								Box_Move(Drct, i);  //向きと何個目のBoxか
+								UI_Box_Move_History(Drct, i);
+								return 0;
+
+							}
 						}
 					}
 				}
@@ -282,10 +291,10 @@ int Player_Back_Argument()
 	//BackSpaceが押されていないなら(プレイヤーが進んだら)　>>　プレイヤーの向きをUIへ渡す・歩数の増加
 	if (Back_Flg == false)
 	{
-		if (Argument_Check == 1)
+		if (Argument_Check == 1 || Argument_Check == 2)
 		{
 			UI_StepCount_MoveOn();
-			Argument_Check = 2;
+			Argument_Check = 3;
 		}
 	}
 
@@ -389,19 +398,19 @@ int Player_Draw()
 
 #ifdef _DEBUG
 
-	DrawFormatString(700,  20, GetColor(255, 0, 0), "0:上 1:右 2:下 3:左 4:通常");
-	DrawFormatString(700,  40, GetColor(255, 0, 0), "Drct:%d", Drct);
-	DrawFormatString(700,  60, GetColor(255, 0, 0), "MoveFlg:%d", Move_Flg);
+	//DrawFormatString(700,  20, GetColor(255, 0, 0), "0:上 1:右 2:下 3:左 4:通常");
+	//DrawFormatString(700,  40, GetColor(255, 0, 0), "Drct:%d", Drct);
+	//DrawFormatString(700,  60, GetColor(255, 0, 0), "MoveFlg:%d", Move_Flg);
 
-	DrawFormatString(700,  120, GetColor(255, 0, 0), "Boxの最大個数:%d", Box_Max);
-	DrawFormatString(700, 160, GetColor(255, 0, 0), "Box_x:%d", Box_x);
-	DrawFormatString(700, 180, GetColor(255, 0, 0), "Box_y:%d", Box_y);
-	DrawFormatString(700, 200, GetColor(255, 0, 0), "Box_nx:%d", Box_nx);
-	DrawFormatString(700, 220, GetColor(255, 0, 0), "Box_ny:%d", Box_ny);
-	DrawFormatString(700, 240, GetColor(255, 0, 0), "Judge_x:%d", Judge_x);
-	DrawFormatString(700, 260, GetColor(255, 0, 0), "Judge_y:%d", Judge_y);
+	//DrawFormatString(700,  120, GetColor(255, 0, 0), "Boxの最大個数:%d", Box_Max);
+	//DrawFormatString(700, 160, GetColor(255, 0, 0), "Box_x:%d", Box_x);
+	//DrawFormatString(700, 180, GetColor(255, 0, 0), "Box_y:%d", Box_y);
+	//DrawFormatString(700, 200, GetColor(255, 0, 0), "Box_nx:%d", Box_nx);
+	//DrawFormatString(700, 220, GetColor(255, 0, 0), "Box_ny:%d", Box_ny);
+	//DrawFormatString(700, 240, GetColor(255, 0, 0), "Judge_x:%d", Judge_x);
+	//DrawFormatString(700, 260, GetColor(255, 0, 0), "Judge_y:%d", Judge_y);
 
-	DrawFormatString(700, 300, GetColor(255, 0, 0), "Argument_Check:%d", Argument_Check);
+	//DrawFormatString(700, 300, GetColor(255, 0, 0), "Argument_Check:%d", Argument_Check);
 
 #endif
 

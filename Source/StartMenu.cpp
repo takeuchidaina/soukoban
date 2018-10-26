@@ -72,7 +72,8 @@ int StartMenu_Draw() {
 	//‚±‚Á‚¿‚à–ˆƒtƒŒ[ƒ€ŒÄ‚Î‚ê‚Ü‚·‚ªŒvZ‚Æ‚Í•Ê‚É‘‚«‚Ü‚·
 	DrawGraph(0, 0, Image.BG, TRUE);
 	DrawGraph(50, 50, Image.Title, TRUE);
-	DrawFormatString(500, 700, GetColor(255, 0, 0), "SelectNum:%d", SelectNum);
+	//DrawFormatString(500, 700, GetColor(255, 0, 0), "SelectNum:%d", SelectNum);
+
 	switch (SelectNum)
 	{
 	case 0:
@@ -97,6 +98,7 @@ int StartMenu_Draw() {
 
 	return 0;
 }
+
 
 int StartMenu_End() {
 	//NoScript

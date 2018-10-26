@@ -1,7 +1,7 @@
 #pragma once
 
 typedef struct {	//構造体
-	int x, y;  //座標の変数
+	int x, y,num;//座標の変数
 } MenuElement_t;
 
 //画像用の構造体
@@ -18,8 +18,8 @@ typedef struct {
 	int Clear_YER;
 	int Step;
 	int Steped;
-	int Number;
-	int On_Number;
+	int Number[10];
+	int On_Number[10];
 	int Back;
 	int On_Back;
 	int NextStage;

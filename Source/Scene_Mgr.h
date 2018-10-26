@@ -10,6 +10,7 @@ typedef enum {
 	E_Scene_Game,
 	E_Scene_GameMenu,
 	E_Scene_Result,
+	E_Scene_MAPSelect,
 
 	E_Scene_None,
 }E_Scene;

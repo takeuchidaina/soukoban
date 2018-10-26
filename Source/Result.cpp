@@ -1,4 +1,9 @@
 #include "DxLib.h"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "Result.h"
 #include "UI.h"
 #include "StartMenu.h"
@@ -6,11 +11,10 @@
 #include "Scene_Mgr.h"
 #include "MAP.h"
 
-
 MenuElement_t ResultMenuElement[MENU_ELEMENT_MAX]{
-	{50 , 300 },
-	{-90 , 350 },
-	{50 , 400 }
+	{50 , 250 },
+	{-90 ,330 },
+	{50 , 410 }
 };
 
 Image_t ResultImage;
@@ -22,6 +26,9 @@ static int step_count;
 static int SelectNum;
 static int Clear_Image_Count;
 static int Clear_Image_Flg;
+int Number[9];
+char NumStr[256];
+int Hosuu_x;
 
 
 int Result_Init() {
@@ -33,7 +40,6 @@ int Result_Init() {
 	ResultImage.Clear_YER = LoadGraph("Images/CLEAR_YER.png");
 	ResultImage.Step = LoadGraph("Images/Step.png");
 	ResultImage.Steped = LoadGraph("Images/Steped.png");
-	ResultImage.Number = LoadGraph("Images/Number.png");
 	ResultImage.Back = LoadGraph("Images/Back.png");
 	ResultImage.On_Back = LoadGraph("Images/OnBack.png");
 	ResultImage.NextStage = LoadGraph("Images/NextStage.png");
@@ -43,6 +49,9 @@ int Result_Init() {
 
 	static int Clear_Image_Count = 0;
 	static int Clear_Image_Flg = 0;
+
+	Number[9] = LoadDivGraph("Images/OnNumber.png",10,10,1,MAP_SIZE,MAP_SIZE,Number);
+	Hosuu_x = 0;
 
 	return 0;
 }
@@ -107,6 +116,22 @@ int Result_Dpct() {
 		}
 	}
 
+	//intå^Ç©ÇÁcharå^Ç÷ïœä∑
+	snprintf(NumStr,256, "%d", step_count);
+
+	if (step_count < 10)
+	{
+		Hosuu_x = 380;
+	}
+	else if (step_count >= 10 && step_count <= 100)
+	{
+		Hosuu_x = 316;
+	}
+	else if (step_count >= 100)
+	{
+		Hosuu_x = 252;
+	}
+
 	return 0;
 }
 
@@ -125,8 +150,14 @@ int Result_Draw() {
 	}
 
 	//Ç©Ç©Ç¡ÇΩï‡êî
-	DrawGraph(50, 100, ResultImage.Step, TRUE);
-	DrawGraph(150, 200, ResultImage.Steped, TRUE);
+	DrawExtendGraph(150, 100,500,150, ResultImage.Step, TRUE);
+	DrawExtendGraph(450, 170,600,220+1, ResultImage.Steped, TRUE);
+
+	//ï‡êî
+	for (int i = 0; i < strlen(NumStr); i++)
+	{
+			DrawGraph(Hosuu_x - i * -MAP_SIZE, 150, Number[NumStr[i] - '0'], TRUE);
+	}
 
 	switch (SelectNum)
 	{

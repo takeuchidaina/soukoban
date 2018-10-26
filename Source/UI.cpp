@@ -4,19 +4,19 @@
 #include "Player.h"
 #include "Box.h"
 #include "Scene_Mgr.h"
-
+#include "MAP.h"
 
 #define HISTORY_MAX 256
 
 //ここで変数を宣言（C++を使わないのでグローバル変数）
-static S_History History[HISTORY_MAX];
-static int StepCount;
+S_History History[HISTORY_MAX];
+int StepCount;
 
 
 int UI_Init() {
 	//ここで初期化をする
 	memset( History , 0 , sizeof(History) );
-	int StepCount = 0 ;
+	StepCount = 0 ;
 	for (int i = 0; i < HISTORY_MAX; i++) {
 		History[i].Player_Drct = E_Drct_None;
 		History[i].Box_Drct = E_Drct_None;
@@ -43,7 +43,17 @@ int UI_Dpct() {
 			History[StepCount].Box_Drct = E_Drct_None;
 		}
 	}
-	
+	if (Keyboard_Get(KEY_INPUT_R) == 1){
+		MAP_Init();
+		Player_Init();
+		Box_Init();
+		UI_Init();
+	}
+
+	if (Keyboard_Get(KEY_INPUT_S) == 1) {
+		Scene_Mgr_ChangeScene(E_Scene_StartMenu);
+	}
+
 	if (Box_Clear() == true) {
 		Scene_Mgr_ChangeScene(E_Scene_Result);
 		DrawFormatString(200, 440, GetColor(255, 0, 0), "クリア");
@@ -59,9 +69,15 @@ int UI_Draw() {
 		//Scene_Mgr_ChangeScene(E_Scene_result);
 		DrawFormatString(200, 440, GetColor(255, 0, 0), "クリア");
 	}
+
+	for (int i = 0; i < 20; i++) {
+		DrawFormatString(900, 0+i*20, GetColor(122, 122, 255), "Count:%d  PDrct:%d BDrct:%d", i, History[i].Player_Drct , History[i].Box_Drct);
+	}
+
+
 #ifdef _DEBUG
 
-	DrawFormatString(700, 500, GetColor(122, 122, 255), "歩数:%d/向き:%d", StepCount, History[StepCount-1].Player_Drct);
+	//DrawFormatString(700, 500, GetColor(122, 122, 255), "歩数:%d/向き:%d", StepCount, History[StepCount-1].Player_Drct);
 
 #endif
 	return 0;
