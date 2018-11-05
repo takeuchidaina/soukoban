@@ -88,18 +88,33 @@ int MAPSelect_Dpct() {
 	for (int i = 0; i < sizeof(MAPSelectMenuElement) / sizeof*(MAPSelectMenuElement); i++) {              // メニュー項目数である5個ループ処理
 		if (i == SelectNum) {          // 今処理しているのが、選択番号と同じ要素なら
 
-			if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {	//座標が80になっている項目でスペースキーを押すと
-														//その項目の中に入る
-				switch (i) {
 
-				case (sizeof(MAPSelectMenuElement) / sizeof*(MAPSelectMenuElement))-1 :
-					Scene_Mgr_ChangeScene(E_Scene_StartMenu);
-					break;
-				default:
-					MAP_SetHandleflag(i + 1);
-					Scene_Mgr_ChangeScene(E_Scene_Game);
-					break;
+			//文化祭バグ用にMAP選べないようにしています
+			if (i != 7 && i != 8 && i != 9) 
+			{
+
+
+
+				if (Keyboard_Get(KEY_INPUT_SPACE) == 1) {	//座標が80になっている項目でスペースキーを押すと
+															//その項目の中に入る
+					switch (i) {
+
+					case (sizeof(MAPSelectMenuElement) / sizeof*(MAPSelectMenuElement)) - 1:
+						Scene_Mgr_ChangeScene(E_Scene_StartMenu);
+						break;
+					default:
+						MAP_SetHandleflag(i + 1);
+						Scene_Mgr_ChangeScene(E_Scene_Game);
+						break;
+					}
 				}
+
+
+
+			}
+			else if(Keyboard_Get(KEY_INPUT_SPACE) == 1)
+			{
+				Scene_Mgr_ChangeScene(E_Scene_StartMenu);
 			}
 		}
 	}
@@ -166,7 +181,8 @@ int MAPSelect_Draw() {
 			{
 				DrawGraph(MAPSelectMenuElement[i].x + 192, MAPSelectMenuElement[i].y, MAPSelectImage.On_Number[MAPSelectMenuElement[i].num], TRUE);
 			}
-			else if (i == 9) {
+			else if(i == 9)
+			{
 				DrawGraph(MAPSelectMenuElement[i].x + 192, MAPSelectMenuElement[i].y, MAPSelectImage.On_Number[1], TRUE);
 				DrawGraph(MAPSelectMenuElement[i].x + 192 + 32, MAPSelectMenuElement[i].y, MAPSelectImage.On_Number[0], TRUE);
 			}

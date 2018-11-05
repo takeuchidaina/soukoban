@@ -64,14 +64,14 @@ int UI_Dpct() {
 int UI_Draw() {
 	//ここで描写
 	//こっちも毎フレーム呼ばれますが計算とは別に書きます
-	DrawFormatString(0, 440, GetColor(255, 0, 0), "歩数:%d", StepCount);
+	//DrawFormatString(0, 440, GetColor(255, 0, 0), "歩数:%d", StepCount);
 	if (Box_Clear() == true) {
 		//Scene_Mgr_ChangeScene(E_Scene_result);
 		DrawFormatString(200, 440, GetColor(255, 0, 0), "クリア");
 	}
 
 	for (int i = 0; i < 20; i++) {
-		DrawFormatString(900, 0+i*20, GetColor(122, 122, 255), "Count:%d  PDrct:%d BDrct:%d", i, History[i].Player_Drct , History[i].Box_Drct);
+		//DrawFormatString(900, 0+i*20, GetColor(122, 122, 255), "Count:%d  PDrct:%d BDrct:%d", i, History[i].Player_Drct , History[i].Box_Drct);
 	}
 
 
